@@ -1,0 +1,433 @@
+Program.Sub.ScreenSU.Start
+Gui.frmHeatRuns..Create
+Gui.frmHeatRuns..Caption("Heat Treatment Runs")
+Gui.frmHeatRuns..Size(10470,7500)
+Gui.frmHeatRuns..MinX(0)
+Gui.frmHeatRuns..MinY(0)
+Gui.frmHeatRuns..Position(0,0)
+Gui.frmHeatRuns..BackColor(-2147483633)
+Gui.frmHeatRuns..MousePointer(0)
+Gui.frmHeatRuns..Event(UnLoad,frmHeatRuns_UnLoad)
+Gui.frmHeatRuns.tabHT.Create(Tab)
+Gui.frmHeatRuns.tabHT.Size(10050,6795)
+Gui.frmHeatRuns.tabHT.Position(60,0)
+Gui.frmHeatRuns.tabHT.Tabs(2)
+Gui.frmHeatRuns.tabHT.SetTab(0)
+Gui.frmHeatRuns.tabHT.Caption("Data")
+Gui.frmHeatRuns.tabHT.SetTab(1)
+Gui.frmHeatRuns.tabHT.Caption("Graphs")
+Gui.frmHeatRuns.gsgcHeatTreat.Create(GsGridControl)
+Gui.frmHeatRuns.gsgcHeatTreat.Size(9885,6000)
+Gui.frmHeatRuns.gsgcHeatTreat.Position(0,375)
+Gui.frmHeatRuns.gsgcHeatTreat.Event(RowCellClick,gsgcHeatTreat_RowCellClick)
+Gui.frmHeatRuns.gsgcHeatTreat.Parent("tabHT",0)
+Gui.frmHeatRuns.gscGraphs.Create(GsChart)
+Gui.frmHeatRuns.gscGraphs.Size(9885,5850)
+Gui.frmHeatRuns.gscGraphs.Position(0,465)
+Gui.frmHeatRuns.gscGraphs.Parent("tabHT",1)
+Gui.frmHeatRuns.dtpBegin.Create(DatePicker)
+Gui.frmHeatRuns.dtpBegin.Size(1935,285)
+Gui.frmHeatRuns.dtpBegin.Position(45,75)
+Gui.frmHeatRuns.dtpBegin.Parent("tabHT",1)
+Gui.frmHeatRuns.dtpEnd.Create(DatePicker)
+Gui.frmHeatRuns.dtpEnd.Size(1935,285)
+Gui.frmHeatRuns.dtpEnd.Position(2385,75)
+Gui.frmHeatRuns.dtpEnd.Parent("tabHT",1)
+Gui.frmHeatRuns.cmdProcess.Create(Button)
+Gui.frmHeatRuns.cmdProcess.Size(1005,375)
+Gui.frmHeatRuns.cmdProcess.Position(4470,45)
+Gui.frmHeatRuns.cmdProcess.Parent("tabHT",1)
+Gui.frmHeatRuns.cmdProcess.Caption("Process")
+Gui.frmHeatRuns.cmdProcess.Event(Click,cmdProcess_Click)
+Gui.frmHeatRuns.lbl1.Create(Label,"to",True,375,255,0,2010,150,True,0,"Arial",8,-2147483633,0)
+Gui.frmHeatRuns.lbl1.Parent("tabHT",1)
+Gui.frmHeatRuns.cmdSave.Create(Button)
+Gui.frmHeatRuns.cmdSave.Size(990,375)
+Gui.frmHeatRuns.cmdSave.Position(25,25)
+Gui.frmHeatRuns.cmdSave.Caption("Save")
+Gui.frmHeatRuns.cmdSave.Event(Click,cmdSave_Click)
+Gui.frmHeatRuns.cmdSave.Parent("tabHT",0)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.External.Include.Library("GAB_5380_LIBRARY.lib")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.ODBC.Connection!con.opencompanyconnection(60)
+f.Data.DataTable.CreateFromSQL("dt","con","SELECT '' as 'REPRINT', JOB, SUFFIX, (select rtrim(B.CUSTOMER) as 'Customer' FROM V_JOB_HEADER B WHERE A.JOB=B.JOB AND A.SUFFIX=B.SUFFIX) AS 'Customer', ' ' as 'Name_Customer', ROUTER, DESCRIPTION, PART, PART_DESCRIPTION, JOB_TOTAL_KG, DATE_DUE, IN_PROCESS, COMPLETE_FLAG, NOTES, OPERATION, RUNID, WORKCENTRE, WORKGROUP, PIECES, EST_KG, (EST_KG*PIECES) AS 'EXTKG', JOB_TOTAL_PIECE, EMP_NUM, EMP_NAME, CAST (RTRIM(DATE_CREATED) AS DATE)  AS 'DATE_CREATED', HOURS, DATESTAMP,HTID FROM GAB_5380_HEAT_RUN A ORDER BY DATE_CREATED DESC",true)
+	
+f.Data.Dictionary.CreateFromSQL("dSrc","con","SELECT rtrim(Customer) As 'Customer', Name_customer FROM V_CUSTOMER_MASTER")
+f.Data.Dictionary.SetDefaultReturn("dSrc","")
+f.Data.DataTable.FillFromDictionary("DT","dSrc","Customer","Name_customer")
+F.Data.Dictionary.Close("dSrc")
+
+gui.frmHeatRuns.gsgcHeatTreat.DataSource("dt")
+gui.frmHeatRuns.gsgcHeatTreat.AddGridviewFromDatatable("gv","dt")
+f.Intrinsic.Control.CallSub(setProperties)
+f.Intrinsic.Control.CallSub(setContextMenus)
+gui.frmHeatRuns.gsgcHeatTreat.anchor(15)
+F.Intrinsic.Control.CallSub(Deserialize)
+gui.frmHeatRuns..Show
+gui.frmHeatRuns.tabHT.SetTab(0)
+Program.Sub.Main.End
+
+Program.Sub.setProperties.Start
+f.Intrinsic.Control.Try
+	gui.frmHeatRuns.gsgcHeatTreat.anchor(15)
+	gui.frmHeatRuns.tabHT.anchor(15)
+	gui.frmHeatRuns.gscGraphs.anchor(15)
+	gui.frmHeatRuns.gsgcHeatTreat.AddGridviewFromDatatable("gv","dt")
+	gui.frmHeatRuns.gsgcHeatTreat.ColumnEdit("gv","REPRINT","EditorButton","REPRINT")
+	Gui.frmHeatRuns.gsgcHeatTreat.SetGridViewProperty("gv","OptionsViewShowGroupPanel",True)
+	Gui.frmHeatRuns.gsgcHeatTreat.SetGridViewProperty("gv","MultiSelect",True)
+	Gui.frmHeatRuns.gsgcHeatTreat.SetGridViewProperty("gv","AllowSort",True)
+	Gui.frmHeatRuns.gsgcHeatTreat.SetGridViewProperty("gv","AllowFilter",True)
+	Gui.frmHeatRuns.gsgcHeatTreat.SetGridViewProperty("gv","OptionsDetailShowDetailTabs",False)
+	Gui.frmHeatRuns.gsgcHeatTreat.SetGridViewProperty("gv","OptionsViewColumnAutoWidth",False)
+	Gui.frmHeatRuns.gsgcHeatTreat.SetGridViewProperty("gv","OptionsViewColumnAutoWidth",False)
+	GUI.frmHeatRuns.gsgcHeatTreat.SetGridviewProperty("gv","AllowDeleteRows",true)
+	Gui.frmHeatRuns.gsgcHeatTreat.SetGridViewProperty("gv","Enableappearanceoddrow",True)
+	
+	'Captions
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB","Caption","Job")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","SUFFIX","Caption","Suffix")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","CUSTOMER","Caption","Customer")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NAME_CUSTOMER","Caption","Customer Name")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATESTAMP","Caption","Date Timestamp")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","ROUTER","Caption","Router")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DESCRIPTION","Caption","Router Description")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART","Caption","Part #")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART_DESCRIPTION","Caption","Part Description")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_KG","Caption","Total KGs")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_DUE","Caption","Due Date")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","IN_PROCESS","Caption","In Process")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","COMPLETE_FLAG","Caption","Complete Flag")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NOTES","Caption","Notes")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","OPERATION","Caption","Operation")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","RUNID","Caption","Run ID #")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","WORKCENTRE","Caption","Workcentre")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","WORKGROUP","Caption","Workgroup")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PIECES","Caption","Pieces Applied")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EST_KG","Caption","Units KG")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_PIECE","Caption","Total Pieces")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NUM","Caption","Employee #")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NAME","Caption","Employee Name")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_CREATED","Caption","Date Ran")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","HOURS","Caption","Hours")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EXTKG","Caption","Ext. KGs")
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","REPRINT","Caption","REPRINT")
+		
+	'Header bold font
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","SUFFIX","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","CUSTOMER","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NAME_CUSTOMER","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATESTAMP","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","ROUTER","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DESCRIPTION","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART_DESCRIPTION","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_KG","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_DUE","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","IN_PROCESS","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","COMPLETE_FLAG","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NOTES","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","OPERATION","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","RUNID","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","WORKCENTRE","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","WORKGROUP","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PIECES","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EST_KG","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_PIECE","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NUM","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NAME","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_CREATED","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","HOURS","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EXTKG","HeaderFontBold",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","REPRINT","HeaderFontBold",True)
+	
+	'Read Only
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","SUFFIX","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","CUSTOMER","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NAME_CUSTOMER","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATESTAMP","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","ROUTER","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DESCRIPTION","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART_DESCRIPTION","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_KG","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_DUE","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","IN_PROCESS","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","COMPLETE_FLAG","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NOTES","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","OPERATION","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","RUNID","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","WORKCENTRE","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","WORKGROUP","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PIECES","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EST_KG","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_PIECE","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NUM","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NAME","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_CREATED","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","HOURS","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EXTKG","ReadOnly",True)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","REPRINT","ReadOnly",True)
+	
+	'Allow Edit
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","SUFFIX","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","CUSTOMER","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NAME_CUSTOMER","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATESTAMP","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","ROUTER","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DESCRIPTION","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART_DESCRIPTION","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_KG","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_DUE","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","IN_PROCESS","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","COMPLETE_FLAG","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NOTES","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","OPERATION","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","RUNID","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","WORKCENTRE","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","WORKGROUP","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PIECES","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EST_KG","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_PIECE","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NUM","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NAME","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_CREATED","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","HOURS","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EXTKG","AllowEdit",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","REPRINT","AllowEdit",False)
+	
+	'Visible
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","IN_PROCESS","Visible",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","Customer","Visible",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","NOTES","Visible",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","OPERATION","Visible",False)
+	gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","COMPLETE_FLAG","Visible",False)
+	GUI.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DESCRIPTION","MinWidth","200")
+	GUI.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART_DESCRIPTION","MinWidth","175")
+	GUI.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB_TOTAL_KG","MinWidth","100")
+	GUI.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_DUE","MinWidth","100")
+	GUI.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","IN_PROCESS","MinWidth","100")
+	GUI.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","ROUTER","MinWidth","100")
+	GUI.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART","MinWidth","100")
+	GUI.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","EMP_NAME","MinWidth","175")
+	Gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_CREATED","DisplayCustomDatetime","d")
+	Gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","DATE_DUE","DisplayCustomDatetime","d")
+	
+	Gui.frmHeatRuns.gsgcHeatTreat.AddSummaryItem("gv","HOURS","SUM_HOURS","Sum","","","n")
+	'Gui.frmHeatRuns.gsgcHeatTreat.AddSummaryItem("gv","EST_KG","SUM_KG","Sum","","","n")
+	gUI.frmHeatRuns.gsgcHeatTreat.AddSummaryItem("gv","EXTKG","SUM_EXTKG","Sum","","","n")
+	'Gui.frmHeatRuns.gsgcHeatTreat.AddSummaryItem("gv","PIECES","SUM_PIECES","Sum","","","n")
+	GUI.frmHeatRuns.gsgcHeatTreat.AddgridGroupSummaryItem("gv","HOURS","HOURS","SUM","| Tot Hours: ","   ","n2")
+	GUI.frmHeatRuns.gsgcHeatTreat.AddgridGroupSummaryItem("gv","EXTKG","EXTKG","SUM"," Tot KG/Cm2: ","","n2")
+	
+	Gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","JOB","CellForeColor","Blue")
+	Gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","SUFFIX","CellForeColor","Blue")
+	Gui.frmHeatRuns.gsgcHeatTreat.SetColumnProperty("gv","PART","CellForeColor","Blue")
+	
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmHeatRuns_Unload)
+f.Intrinsic.Control.EndTry
+Program.Sub.setProperties.End
+
+Program.Sub.Deserialize.Start
+	F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	
+	V.Local.sSerialize.Declare
+	V.Local.bFile.Declare
+	
+	'Delete old registry records
+	F.Global.Registry.ReadValue(V.Caller.User,V.Caller.CompanyCode,"gv",5380,0,5,"",V.Local.sSerialize)
+	F.Intrinsic.Control.If(V.Local.sSerialize,<>,"")
+		F.ODBC.Connection!common.OpenConnection(V.Ambient.Ccon,V.Ambient.Cuser,V.Ambient.Cpass)
+		F.ODBC.Connection!common.Execute("Delete From Gs_Registry Where Reg_ID = 5380 And Seq < 1000;")
+		F.ODBC.Connection!common.Close
+	F.Intrinsic.Control.EndIf
+
+	'GVAllSO
+	F.Global.Registry.ReadValue(V.Caller.User,V.Caller.CompanyCode,"gv",5380,1000,6,"",V.Local.sSerialize)
+	F.Intrinsic.Control.If(V.Local.sSerialize.Trim,<>,"")
+		Gui.frmHeatRuns.gsgcHeatTreat.Deserialize(V.Local.sSerialize)
+	F.Intrinsic.Control.EndIf
+
+	
+	F.Intrinsic.Control.Catch
+		F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+		F.Intrinsic.UI.Msgbox(V.Local.sError)
+		F.Intrinsic.Control.End
+	F.Intrinsic.Control.EndTry
+Program.Sub.Deserialize.End
+
+Program.Sub.Serialize.Start
+	F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	
+	V.Local.sSerialize.Declare
+	
+	'GVAllSO
+	Gui.frmHeatRuns.gsgcHeatTreat.Serialize("gv",V.Local.sSerialize)
+	F.Global.Registry.AddValue(V.Caller.User,V.Caller.CompanyCode,"gv",5380,1000,False,"Serialize",False,0,-999.0,1/1/1980,12:00:00 AM,V.Local.sSerialize)
+
+	
+	F.Intrinsic.Control.Catch
+		F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+		F.Intrinsic.UI.Msgbox(V.Local.sError)
+		F.Intrinsic.Control.End
+	F.Intrinsic.Control.EndTry
+Program.Sub.Serialize.End
+
+Program.Sub.SetContextMenus.Start
+F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	v.Local.bNewWO.Declare	
+	
+	Gui.frmHeatRuns..ContextMenuCreate("ctxAll")
+	Gui.frmHeatRuns.gsgcHeatTreat.ContextMenuAttach("ctxAll")
+	Gui.frmHeatRuns..ContextMenuAddItem("ctxAll","Export",0,"Export")
+	Gui.frmHeatRuns..ContextMenuSetItemEventHandler("ctxAll","Export","MenuClickExport")
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.SetContextMenus.End
+
+Program.Sub.MenuClickExport.Start
+	F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	
+	V.Local.sFileExport.Declare
+	V.Local.bExcel.Declare
+	V.Local.bFileLocked.Declare
+	V.Local.sMsg.Declare
+	V.Local.sControl.Declare
+
+	F.Intrinsic.Control.SelectCase(V.Args.MenuName)
+		F.Intrinsic.Control.Case("CTXALL")
+			V.Local.sControl.Set("gsgcHeatTreat")
+	F.Intrinsic.Control.EndSelect
+
+	F.Automation.MSExcel.CheckPresence(V.Local.bExcel)
+	F.Intrinsic.Control.If(V.Local.bExcel)
+		F.Intrinsic.String.Build("{0}\GAB_5380_HEAT_TREAT_RUNS_{1}_Export.xlsx",V.Caller.LocalGssTempDir,V.Local.sControl,V.Local.sFileExport)
+		F.Intrinsic.File.IsFileLocked(V.Local.sFileExport,V.Local.bFileLocked)
+		F.Intrinsic.Control.If(V.Local.bFileLocked)
+			F.Intrinsic.String.Build("File is already open. Please close and export again.{0}File: {1}",V.Ambient.NewLine,V.Local.sFileExport,V.Local.sMsg)
+			F.Intrinsic.UI.Msgbox(V.Local.sMsg,"File In Use")
+		F.Intrinsic.Control.Else
+			Gui.frmHeatRuns.[V.Local.sControl].Export(V.Local.sFileExport,"xlsx")
+			F.Intrinsic.Task.ShellExec(0,"",V.Local.sFileExport,"","",1)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("{0}\PPT_OpenWorkOrders_{1}_Export.csv",V.Caller.LocalGssTempDir,V.Local.sControl,V.Local.sFileExport)
+		F.Intrinsic.File.IsFileLocked(V.Local.sFileExport,V.Local.bFileLocked)
+		F.Intrinsic.Control.If(V.Local.bFileLocked)
+			F.Intrinsic.String.Build("File is already open. Please close and export again.{0}File: {1}",V.Ambient.NewLine,V.Local.sFileExport,V.Local.sMsg)
+			F.Intrinsic.UI.Msgbox(V.Local.sMsg,"File In Use")
+		F.Intrinsic.Control.Else
+			Gui.frmHeatRuns.[V.Local.sControl].Export(V.Local.sFileExport,"csv")
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Task.ShellExec(0,"",V.Local.sFileExport,"","",1)
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.Catch
+		F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+		F.Intrinsic.UI.Msgbox(V.Local.sError)
+		F.Intrinsic.Control.End 
+	F.Intrinsic.Control.EndTry
+Program.Sub.MenuClickExport.End
+
+Program.Sub.frmHeatRuns_UnLoad.Start
+F.Intrinsic.Control.CallSub(Serialize)
+f.ODBC.Connection!con.Close
+f.Intrinsic.Control.End
+Program.Sub.frmHeatRuns_UnLoad.End
+
+Program.Sub.gsgcHeatTreat_RowCellClick.Start
+V.Local.sJob.Declare
+v.Local.sSuf.Declare
+v.Local.sparams.Declare
+v.Local.spart.Declare
+v.Local.sLoc.Declare
+v.Local.sLoc.Set("")
+F.Intrinsic.Control.SelectCase(v.Args.Column)
+	F.Intrinsic.Control.CaseAny("JOB","SUFFIX")
+		Gui.frmHeatRuns.gsgcHeatTreat.GetCellValueByColumnName("gv","JOB",V.Args.RowIndex,V.Local.sJob)
+		Gui.frmHeatRuns.gsgcHeatTreat.GetCellValueByColumnName("gv","SUFFIX",V.Args.RowIndex,V.Local.sSuf)
+		'Build Call Wrapper String
+		F.Intrinsic.String.Concat("7","!*!",V.Local.sJob,"!*!",V.Local.sSuf,"!*!","A",V.Local.sParams)
+		F.Global.General.CallWrapperSync(450000,V.Local.sParams)
+		
+	F.Intrinsic.Control.CASEANY("PART","Part")
+		Gui.frmHeatRuns.gsgcHeatTreat.GetCellValueByColumnName("gv","PART",V.Args.RowIndex,V.Local.sPart)
+		F.Intrinsic.String.Build("{0}!*!{1}!*!O",V.Local.sPart,V.Local.sLoc,V.Local.sParams)
+		F.Global.General.CallWrapperSync(300011,V.Local.sParams)
+		
+	F.Intrinsic.Control.CaseAny("REPRINT","Reprint")
+		Gui.frmHeatRuns.gsgcHeatTreat.GetCellValueByColumnName("gv","JOB",V.Args.RowIndex,V.Local.sJob)
+		Gui.frmHeatRuns.gsgcHeatTreat.GetCellValueByColumnName("gv","SUFFIX",V.Args.RowIndex,V.Local.sSuf)
+		'Build Call Wrapper String
+		f.Intrinsic.Control.CallSub(PrintHTWO,"WOH",v.Local.sJob,"WOS",v.Local.sSuf)
+		
+f.Intrinsic.Control.EndSelect		
+
+Program.Sub.gsgcHeatTreat_RowCellClick.End
+
+Program.Sub.cmdProcess_Click.Start
+f.Intrinsic.Control.Try
+	v.Local.sSql.Declare
+	v.Local.dStart.Declare
+	v.Local.dEnd.Declare
+	v.Local.i.Declare
+	v.Local.iLen.Declare
+	v.Local.sSeriesBase.Declare
+	v.Local.sSeriesStack.Declare
+	
+	v.Local.dStart.Set(v.Screen.frmHeatRuns!dtpBegin.Value)
+	v.Local.dEnd.Set(v.Screen.frmHeatRuns!dtpEnd.value)
+	f.Intrinsic.String.Build("SELECT SUM((EST_KG*PIECES)) AS TOTALKG, WORKGROUP FROM GAB_5380_HEAT_RUN WHERE DATE_CREATED>='{0}' AND DATE_CREATED<='{1}' AND RTRIM(WORKGROUP)<>'HIH' AND LEFT(ROUTER,5)<>'H-IHT' GROUP BY WORKGROUP",v.Local.dStart.PervasiveDate,v.Local.dEnd.PervasiveDate,v.Local.sSQL)
+	f.Data.DataTable.CreateFromSQL("dtVals","con",v.Local.ssql)
+	f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtVals.RowCount--,1)
+		f.Intrinsic.String.Concat(v.Local.sSeriesBase,v.DataTable.dtVals(v.Local.i).WORKGROUP!FIELDVALTRIM,"*!*",v.DataTable.dtVals(v.Local.i).TOTALKG!FIELDVALTRIM,"!*!",v.Local.sSeriesBase)
+		f.Intrinsic.String.Concat(v.Local.sSeriesStack,v.DataTable.dtVals(v.Local.i).WORKGROUP!FIELDVALTRIM,"*!*0","!*!",v.Local.sSeriesStack)
+	f.Intrinsic.Control.Next(v.Local.i)
+	
+	v.Local.iLen.Set(v.Local.sSeriesBase.Length)
+	f.Intrinsic.Math.Sub(v.Local.iLen,3,v.Local.iLen)
+	f.Intrinsic.String.Left(v.Local.sSeriesBase,v.Local.ilen,v.Local.sSeriesBase)
+	
+	v.Local.iLen.Set(v.Local.sSeriesStack.Length)
+	f.Intrinsic.Math.Sub(v.Local.iLen,3,v.Local.iLen)
+	f.Intrinsic.String.Left(v.Local.sSeriesStack,v.Local.iLen,v.Local.sSeriesStack)
+	
+	gui.frmHeatRuns.gscGraphs.createvertstackedbarchart("Total KG by Workgroup","Total KG by Workgroup","Total KGs",v.Local.sSeriesBase,"Total KGs",v.Local.sSeriesStack,False)
+	
+f.Intrinsic.Control.Catch
+
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdProcess_Click.End
+
+Program.Sub.cmdSave_Click.Start
+f.Intrinsic.Control.Try
+	v.Local.sfile.Declare
+	f.Data.DataTable.SaveToDB("dt","con","GAB_5380_HEAT_RUN","HTID")
+	F.Intrinsic.UI.Msgbox("Successfully saved.")
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmHeatRuns_Unload)
+
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdSave_Click.End
+
+
