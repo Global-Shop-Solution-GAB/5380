@@ -1,0 +1,221 @@
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.getPricing.Start
+f.ODBC.Connection!con5380.OpenCompanyConnection(60)
+v.Local.sRtr.Declare
+v.Local.fQty.Declare
+v.Local.sSql.Declare
+v.Local.sMsg.Declare
+V.Local.sBas.Declare
+v.Local.fPrc.Declare
+v.Local.fStd.Declare
+v.Local.sCst.Declare
+v.Local.fExt.Declare
+v.Local.fFnl.Declare
+v.Local.fCPr.Declare
+v.Local.fMin.Declare
+v.Local.fCon.Declare
+v.Local.sRtr.Set(v.Args.Rtr)
+v.Local.fQty.Set(v.Args.Qty)
+v.Local.sCst.Set(v.Args.Cust)
+F.Intrinsic.Control.If(V.DataTable.dt5380.Exists)
+	F.Data.DataTable.Close("dt5380")
+F.Intrinsic.Control.EndIf
+f.Intrinsic.String.Build("SELECT * FROM GAB_5380_MATRIX WHERE ROUTER='{0}'",v.Local.sRtr,v.Local.sSql)
+f.Data.DataTable.CreateFromSQL("dt5380",con5380,v.Local.sSql,true)
+f.Intrinsic.Control.If(v.DataTable.dt5380.RowCount,>,1)
+	f.Intrinsic.UI.Msgbox("Multiple records found!")
+	f.Intrinsic.Control.CallSub(unloadPrice)
+f.Intrinsic.Control.Else
+	'Apply the price break
+	f.Intrinsic.Control.If(v.DataTable.dt5380.RowCount,<>,0)
+		v.Local.sBas.Set(v.DataTable.dt5380(0).BASE_UM!fieldvaltrim)
+		f.Intrinsic.Control.If(v.Local.sBas.UCase,<>,"CM")
+			v.Local.fStd.Set(v.DataTable.dt5380(0).STANDARD_PRICE!FIELDVALFLOAT)
+			f.Intrinsic.Control.If(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_1!FIELDVALFLOAT)
+				f.Intrinsic.Math.ADD(v.Local.fStd,0,v.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_1!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_2!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_1!FIELDVALFLOAT,v.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_2!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_3!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_2!FIELDVALFLOAT,V.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_3!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_4!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_3!FIELDVALFLOAT,V.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_4!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_5!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_4!FIELDVALFLOAT,V.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_5!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_5!FIELDVALFLOAT,V.Local.fPrc)
+			f.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.Else
+			v.Local.fStd.Set(v.DataTable.dt5380(0).STANDARD_PRICE!FIELDVALFLOAT)
+			f.Intrinsic.Control.If(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_1!FIELDVALFLOAT)
+				F.Intrinsic.UI.SleepMS(10)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_1!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_2!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_1!FIELDVALFLOAT,v.Local.fPrc)
+
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_2!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_3!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_2!FIELDVALFLOAT,V.Local.fPrc)
+
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_3!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_4!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_3!FIELDVALFLOAT,V.Local.fPrc)
+
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_4!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dt5380(0).BREAK_QTY_NUM_5!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_4!FIELDVALFLOAT,V.Local.fPrc)
+				
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dt5380(0).BREAK_QTY_NUM_5!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dt5380(0).BREAK_PRICE_5!FIELDVALFLOAT,V.Local.fPrc)
+				
+			f.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.EndIf
+		
+		'Get the extension
+		f.Intrinsic.math.mult(v.Local.fPrc,v.Local.fQty,v.Local.fExt)
+		
+		'Minimum charge if applicable
+		f.Intrinsic.Control.If(v.Local.fExt,<,v.DataTable.dt5380(0).MINIMUM_CHARGE!FIELDVALFLOAT)
+			v.Local.fQty.Set(1)
+			v.Local.fFnl.Set(v.DataTable.dt5380(0).MINIMUM_CHARGE!FIELDVALFLOAT)
+		f.Intrinsic.Control.Else
+			v.Local.fFnl.Set(v.Local.fPrc)
+		F.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.EndIf
+	
+	'Find if this is a special customer
+	f.Intrinsic.String.Build("SELECT CONTRACT_PRICE FROM GAB_5380_CUST_PRICE WHERE ROUTER='{0}' AND CUSTOMER='{1}'",v.Local.sRtr,v.Local.sCst,v.Local.ssql)
+	f.ODBC.Connection!con5380.executeandreturn(v.Local.sSql,v.Local.fCPr)
+	f.Intrinsic.Control.If(v.Local.fCPr,<>,0)
+		'Reset the quantity
+		v.Local.fQty.Set(v.Args.Qty)
+		'Get Conversion
+		f.Intrinsic.String.Build("SELECT CONV_FACTOR FROM GAB_5380_CUST_PRICE WHERE ROUTER='{0}' AND CUSTOMER='{1}'",v.Local.sRtr,v.Local.sCst,v.Local.ssql)
+		f.ODBC.Connection!con5380.executeandreturn(v.Local.sSql,v.Local.fCon)
+		'sET PRICE
+		v.Local.fPrc.Set(v.Local.fCPr)
+		F.Intrinsic.Math.Round(V.Local.fCPr,2,V.Local.fCPr)
+		'Determine if there is a quantity break
+		f.Intrinsic.String.Build("SELECT * FROM GAB_5380_CUST_PRICE WHERE ROUTER='{0}' AND CUSTOMER='{1}'",v.Local.sRtr,v.Local.sCst,v.Local.sSql)
+		F.Intrinsic.Control.If(V.DataTable.dtCP5380.Exists)
+			F.Data.DataTable.Close("dtCP5380")
+		F.Intrinsic.Control.EndIf
+		
+		f.Data.DataTable.CreateFromSQL("dtCP5380","con5380",v.Local.sSql,true)
+
+		f.Intrinsic.Control.If(v.DataTable.dtCP5380(0).QTY_BREAK_1!FIELDVAL,<>,0)
+			v.Local.fStd.Set(v.DataTable.dtCP5380(0).CONTRACT_PRICE!FIELDVALFLOAT)
+			f.Intrinsic.Control.If(v.Local.fQty,<,v.DataTable.dtCP5380(0).QTY_BREAK_1!FIELDVALFLOAT)
+				f.Intrinsic.Math.ADD(v.Local.fStd,0,v.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dtCP5380(0).QTY_BREAK_1!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dtCP5380(0).QTY_BREAK_2!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dtCP5380(0).BREAK_PRICE_1!FIELDVALFLOAT,v.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dtCP5380(0).QTY_BREAK_2!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dtCP5380(0).QTY_BREAK_3!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dtCP5380(0).BREAK_PRICE_2!FIELDVALFLOAT,V.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dtCP5380(0).QTY_BREAK_3!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dtCP5380(0).QTY_BREAK_4!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dtCP5380(0).BREAK_PRICE_3!FIELDVALFLOAT,V.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dtCP5380(0).QTY_BREAK_4!FIELDVALFLOAT)
+			f.Intrinsic.Control.AndIf(v.Local.fQty,<,v.DataTable.dtCP5380(0).QTY_BREAK_5!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dtCP5380(0).BREAK_PRICE_4!FIELDVALFLOAT,V.Local.fPrc)
+			f.Intrinsic.Control.ElseIf(v.Local.fQty,>=,v.DataTable.dtCP5380(0).QTY_BREAK_5!FIELDVALFLOAT)
+				F.Intrinsic.Math.ADD(v.Local.fStd,v.DataTable.dtCP5380(0).BREAK_PRICE_5!FIELDVALFLOAT,V.Local.fPrc)
+			f.Intrinsic.Control.EndIf
+		f.Intrinsic.Control.EndIf
+		
+		'Determine if minimum charge is necessary
+		f.Intrinsic.Math.Mult(v.Local.fQty,v.Local.fPrc,v.Local.fExt)
+		f.Intrinsic.String.Build("SELECT MIN_CHARGE FROM GAB_5380_CUST_PRICE WHERE ROUTER='{0}' AND CUSTOMER='{1}'",v.Local.sRtr,v.Local.sCst,v.Local.ssql)
+		f.ODBC.Connection!con5380.executeandreturn(v.Local.sSql,v.Local.fMin)
+		f.Intrinsic.Control.If(v.Local.fMin,>,v.Local.fExt)
+			v.Local.fQty.Set(1)
+			v.Local.fFnl.Set(v.Local.fMin)
+		f.Intrinsic.Control.Else
+			v.local.fFnl.Set(v.Local.fPrc)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.control.EndIf
+	f.Intrinsic.Variable.AddRV("fPrice",v.Local.fFnl)
+	f.Intrinsic.Variable.AddRV("fNwQty",v.Local.fQty)
+f.Intrinsic.Control.EndIf
+f.odbc.Connection!con5380.Close
+Program.Sub.getPricing.End
+
+Program.Sub.PrintHTWO.Start
+'Print the Heat Treat Work Order
+v.Local.sret.Declare
+v.Local.sVal.Declare
+v.Local.sPrm.Declare
+v.Local.sMyImage.Declare
+v.Local.smycustPO.Declare
+v.Local.sFile.Declare
+v.Local.sPath.Declare
+v.Local.sfullfilepath.Declare
+V.Local.sWO.Declare
+v.Local.sWOH.Declare
+v.Local.sWOS.Declare
+v.Local.lID.Declare
+V.Local.SPART.Declare
+V.Local.SSQL.Declare
+v.Local.sPart.Set("Reprint")
+
+V.Local.sWOH.Set(v.Args.WOH)
+v.Local.sWOS.Set(V.Args.WOS)
+
+'Get Document link
+f.Intrinsic.String.Concat(v.Local.sWOH,v.Local.sWOS,v.Local.sWO)
+f.Intrinsic.String.Build("select link_id_int from v_LINK_DATA where id='{0}'",v.Local.sWO,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.lID)
+
+'Get Parts image
+f.Intrinsic.String.Build("SELECT PATH FROM ATG_DOC_ASSOC WHERE link_ID='{0}' and description='Parts'",v.Local.lID,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.spath)
+f.Intrinsic.String.Build("SELECT FILE FROM ATG_DOC_ASSOC WHERE link_ID='{0}' and description='Parts'",v.Local.lID,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.sFile)
+f.Intrinsic.String.Concat(v.Local.sPath.RTrim,"\",v.Local.sFile.RTrim,v.Local.sfullfilepath)
+v.Local.sMyImage.Set(v.Local.sfullfilepath)
+
+'Get PO image
+f.Intrinsic.String.Build("SELECT PATH FROM ATG_DOC_ASSOC WHERE link_ID='{0}' and description='Documents'",v.Local.lID,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.spath)
+f.Intrinsic.String.Build("SELECT FILE FROM ATG_DOC_ASSOC WHERE link_ID='{0}' and description='Documents'",v.Local.lID,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.sFile.RTrim)
+f.Intrinsic.String.Concat(v.Local.sPath.RTrim,"\",v.Local.sFile.RTrim,v.Local.sfullfilepath)
+v.Local.smycustPO.Set(v.Local.sfullfilepath)
+
+'Print heat treatment paperwork
+f.Intrinsic.String.ConcatCallWrapperArgs(v.Local.sWOH,v.Local.sWOS,"1811",v.Local.sPrm)
+f.Global.General.CallWrapperSyncBio(900100,v.Local.sPrm)
+f.Intrinsic.String.Split("Terminal*!*MATLBAR*!*OUTBAR*!*FGBAR*!*PROGRAM*!*REPORTID*!*LOGO*!*MYIMAGE*!*MYCUSTPO*!*MYPART","*!*",v.Local.sPrm)
+f.Intrinsic.String.concat(v.Caller.Terminal,"*!* *!* *!* *!*HEAT*!*001811*!* *!*",v.Local.sMyImage,"*!*",v.Local.sMyCustPO,"*!*",v.Local.sPart,v.Local.sVal)
+f.Intrinsic.String.Split(v.Local.sVal,"*!*",v.Local.sval)
+f.Global.BI.PrintReport(100004,0,v.Local.sPrm,v.Local.sVal,"",true)
+Program.Sub.PrintHTWO.End
+
+Program.Sub.toggleHeatReport.Start
+'f.ODBC.Connection!conCommon.OpenCommonConnection(30)
+'v.Local.sSql.Declare
+'V.Local.sVal.Declare
+'v.Local.sVal.Set(v.Args.sFlag)
+
+
+''10 is Heat Treat Report, 11 is machine report
+'f.Intrinsic.Control.If(v.Local.sVal,=,"1")
+'	'f.Intrinsic.String.Build("UPDATE BIR_ACTIVE_SEQ SET Active=1 where report_id=1811 and REPORT_SEQUENCE=10 and company='{1}'",v.Local.sVal,v.Caller.CompanyCode,v.Local.sSql)
+'	'f.ODBC.Connection!conCommon.execute(v.Local.ssql)
+'	'f.Intrinsic.String.Build("UPDATE BIR_ACTIVE_SEQ SET Active=0 where report_id=1811 and REPORT_SEQUENCE=11 and company='{1}'",v.Local.sVal,v.Caller.CompanyCode,v.Local.sSql)
+'	'f.ODBC.Connection!conCommon.execute(v.Local.ssql)
+'f.Intrinsic.Control.else
+'	'f.Intrinsic.String.Build("UPDATE BIR_ACTIVE_SEQ SET Active=0 where report_id=1811 and REPORT_SEQUENCE=10 and company='{1}'",v.Local.sVal,v.Caller.CompanyCode,v.Local.sSql)
+'	'f.ODBC.Connection!conCommon.execute(v.Local.ssql)
+'	'f.Intrinsic.String.Build("UPDATE BIR_ACTIVE_SEQ SET Active=1 where report_id=1811 and REPORT_SEQUENCE=11 and company='{1}'",v.Local.sVal,v.Caller.CompanyCode,v.Local.sSql)
+'	'f.ODBC.Connection!conCommon.execute(v.Local.ssql)
+'f.Intrinsic.Control.EndIf
+''f.ODBC.Connection!conCommon.execute(v.Local.ssql)
+'f.ODBC.Connection!conCommon.Close
+Program.Sub.toggleHeatReport.End
