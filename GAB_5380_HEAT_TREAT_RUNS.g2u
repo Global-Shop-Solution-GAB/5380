@@ -1,0 +1,33 @@
+Program.Sub.ScreenSU.Start
+Gui.frmHeatRuns..Create
+Gui.frmHeatRuns..Caption("Heat Treatment Runs")
+Gui.frmHeatRuns..Size(9525,6255)
+Gui.frmHeatRuns..MinX(0)
+Gui.frmHeatRuns..MinY(0)
+Gui.frmHeatRuns..Position(0,0)
+Gui.frmHeatRuns..BackColor(-2147483633)
+Gui.frmHeatRuns..MousePointer(0)
+Gui.frmHeatRuns..Event(UnLoad,frmHeatRuns_UnLoad)
+Gui.frmHeatRuns.gsgcHeatTreat.Create(GsGridControl)
+Gui.frmHeatRuns.gsgcHeatTreat.Size(9135,5460)
+Gui.frmHeatRuns.gsgcHeatTreat.Position(75,90)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.ODBC.Connection!con.opencompanyconnection(60)
+f.Data.DataTable.CreateFromSQL("dt","con","SELECT * FROM GAB_5380_HEAT_RUN",true)
+gui.frmHeatRuns.gsgcHeatTreat.DataSource("dt")
+gui.frmHeatRuns.gsgcHeatTreat.AddGridviewFromDatatable("gv","dt")
+gui.frmHeatRuns.gsgcHeatTreat.anchor(15)
+gui.frmHeatRuns..Show
+Program.Sub.Main.End
+
+Program.Sub.frmHeatRuns_UnLoad.Start
+f.ODBC.Connection!con.Close
+f.Intrinsic.Control.End
+Program.Sub.frmHeatRuns_UnLoad.End
+
+
