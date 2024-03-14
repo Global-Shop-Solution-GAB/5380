@@ -1,0 +1,179 @@
+Program.Sub.ScreenSU.Start
+Gui.frmHTConfig..Create
+Gui.frmHTConfig..Caption("Heat Treat Configuration Setup")
+Gui.frmHTConfig..Size(16020,5925)
+Gui.frmHTConfig..MinX(0)
+Gui.frmHTConfig..MinY(0)
+Gui.frmHTConfig..Position(0,0)
+Gui.frmHTConfig..BackColor(-2147483633)
+Gui.frmHTConfig..MousePointer(0)
+Gui.frmHTConfig..Event(UnLoad,frmRuleSetup_UnLoad)
+Gui.frmHTConfig.gsgcRules.Create(GsGridControl)
+Gui.frmHTConfig.gsgcRules.Size(15525,1290)
+Gui.frmHTConfig.gsgcRules.Position(150,165)
+Gui.frmHTConfig.cmdSave.Create(Button)
+Gui.frmHTConfig.cmdSave.Size(1365,375)
+Gui.frmHTConfig.cmdSave.Position(135,4890)
+Gui.frmHTConfig.cmdSave.Caption("Save")
+Gui.frmHTConfig.cmdSave.Event(Click,cmdSave_Click)
+Gui.frmHTConfig.gsgcWC.Create(GsGridControl)
+Gui.frmHTConfig.gsgcWC.Size(2295,3030)
+Gui.frmHTConfig.gsgcWC.Position(150,1785)
+Gui.frmHTConfig.lbl1.Create(Label,"Heat Treatment Workcentres",True,2985,255,0,150,1560,True,0,"Arial",8,-2147483633,0)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.cmdSave_Click.Start
+f.Intrinsic.Control.Try
+	v.Local.sFileLocat.Declare(string)
+	f.Intrinsic.String.Concat(v.Caller.GasDir,"\",V.Caller.CompanyCode,"_GAB_5380_HT_CONFIG.xml",v.Local.sFileLocat)
+	f.Data.DataTable.SaveToXML("dt",0,true,v.Local.sfileLocat)
+	f.Intrinsic.String.Concat(v.Caller.GasDir,"\",V.Caller.CompanyCode,"_GAB_5380_HT_WC.xml",v.Local.sFileLocat)
+	f.Data.DataTable.SaveToXML("dtD",0,true,v.Local.sfileLocat)
+	f.Intrinsic.UI.Msgbox("Successfully Updated.")
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmRuleSetup_UnLoad)
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdSave_Click.End
+
+Program.Sub.checkTables.Start
+f.Intrinsic.Control.Try
+	v.Local.bCheck.Declare
+
+	'create table
+	f.ODBC.Connection!con.tableExists("GAB_5380_MATRIX",V.Local.bCheck)
+	F.Intrinsic.Control.If(V.Local.bCheck,=,False)
+		f.ODBC.Connection!con.execute("CREATE TABLE GAB_5380_MATRIX  ( ROUTER VARCHAR(100) NOT NULL, STANDARD_PRICE DOUBLE, MINIMUM_CHARGE DOUBLE, BREAK_QTY_NUM_1 DOUBLE, BREAK_QTY_NUM_2 DOUBLE, BREAK_QTY_NUM_3 DOUBLE, BREAK_QTY_NUM_4 DOUBLE, BREAK_QTY_NUM_5 DOUBLE, BREAK_PRICE_1 DOUBLE, BREAK_PRICE_2 DOUBLE, BREAK_PRICE_3 DOUBLE, BREAK_PRICE_4 DOUBLE, BREAK_PRICE_5 DOUBLE, BASE_UM CHAR(100), CONVERSION_UM CHAR(100), CONVERSION_FACTOR DOUBLE, EFFECTIVE_DATE DATE, UNIT_COST DOUBLE, PRICE_CODE CHAR(100), PRICE_CODE_DESC CHAR(100), CURRENCY_CODE CHAR(100) );")
+	F.Intrinsic.Control.EndIf
+	
+	f.ODBC.Connection!con.tableExists("GAB_5380_HT_INDEX",V.Local.bCheck)
+	F.Intrinsic.Control.If(V.Local.bCheck,=,False)
+		f.ODBC.Connection!con.execute("CREATE TABLE GAB_5380_HT_INDEX  ( ORDER_NO CHAR(7), SUFFIX CHAR(3), REVIEWED CHAR(5), PROCESSED CHAR(1) DEFAULT 'N', ROUTER CHAR(20), QTY DOUBLE, UOM CHAR(2), PIECECOUNT DOUBLE, DESCRIPTION CHAR(30), EXTRADESC LONGVARCHAR, PICTURE CHAR(255), CUSTOMER CHAR(6), GSSPART CHAR(20), CUSTOMER_PO CHAR(15), TECH_NOTES CHAR(255), PO_PICTURE CHAR(255), CustShipTo CHAR(6), ShipVia CHAR(20), CM DOUBLE, HT_DOCUMENT LONGVARCHAR, HIID IDENTITY DEFAULT '0' CONSTRAINT UK_HIID UNIQUE USING 0 );")
+		F.ODBC.Connection!con.execute("ALTER TABLE GAB_5380_HT_INDEX IN DICTIONARY ADD CONSTRAINT PK_HIID PRIMARY KEY  ( HIID ) USING 0;")
+	F.Intrinsic.Control.EndIf
+	
+	f.ODBC.Connection!con.tableExists("GAB_5380_HEAT_RUN",V.Local.bCheck)
+	F.Intrinsic.Control.If(V.Local.bCheck,=,False)
+		f.ODBC.Connection!con.execute("CREATE TABLE GAB_5380_HEAT_RUN ( JOB VARCHAR(6), SUFFIX VARCHAR(6), ROUTER VARCHAR(20), DESCRIPTION VARCHAR(30), PART VARCHAR(20), PART_DESCRIPTION VARCHAR(30), JOB_TOTAL_KG DOUBLE, DATE_DUE DATE, IN_PROCESS VARCHAR(1), COMPLETE_FLAG VARCHAR(1), NOTES LONGVARCHAR, OPERATION VARCHAR(6), RUNID INTEGER, WORKCENTRE VARCHAR(4), WORKGROUP VARCHAR(4), PIECES DOUBLE, EST_KG DOUBLE, JOB_TOTAL_PIECE DOUBLE, EMP_NUM CHAR(5), EMP_NAME CHAR(30), DATE_CREATED VARCHAR(50), Hours DOUBLE, HTID IDENTITY DEFAULT '0' CONSTRAINT UK_HTID UNIQUE USING 0, DATESTAMP VARCHAR(50) );")
+		f.ODBC.Connection!con.execute("ALTER TABLE GAB_5380_HEAT_RUN IN DICTIONARY ADD CONSTRAINT PK_HTID PRIMARY KEY  ( HTID ) USING 0;")
+	F.Intrinsic.Control.EndIf
+	
+	f.ODBC.Connection!con.TableExists("GAB_5380_CUST_PRICE",V.Local.bCheck)
+	F.Intrinsic.Control.If(v.Local.bCheck,=,False)
+		f.ODBC.Connection!con.Execute("CREATE TABLE GAB_5380_CUST_PRICE  ( CUSTOMER CHAR(6), ROUTER CHAR(20), DESCRIPTION CHAR(50), CUST_ITEM CHAR(50), CONTRACT_PRICE DOUBLE, UM CHAR(2), MIN_CHARGE DOUBLE, BASE_UM CHAR(2), CONV_FACTOR DOUBLE, QTY_BREAK_1 DOUBLE, QTY_BREAK_2 DOUBLE, QTY_BREAK_3 DOUBLE, QTY_BREAK_4 DOUBLE, QTY_BREAK_5 DOUBLE, BREAK_PRICE_1 DOUBLE, BREAK_PRICE_2 DOUBLE, BREAK_PRICE_3 DOUBLE, BREAK_PRICE_4 DOUBLE, BREAK_PRICE_5 DOUBLE );")
+	F.Intrinsic.Control.EndIf
+	
+	f.ODBC.Connection!con.TableExists("GAB_5380_CONFIG",V.Local.bCheck)
+	F.Intrinsic.Control.If(v.Local.bCheck,=,False)
+		f.ODBC.Connection!con.Execute("CREATE TABLE GAB_5380_CONFIG  ( WatchFolder VARCHAR(255), TempMoveFolder VARCHAR(255), FinalMoveFolder VARCHAR(255), Startnumber INTEGER );")
+	F.Intrinsic.Control.EndIf
+	
+	
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmRuleSetup_UnLoad)
+f.Intrinsic.Control.EndTry
+Program.Sub.checkTables.End
+
+Program.Sub.Main.Start
+f.Intrinsic.Control.Try
+	'Open connection
+	f.ODBC.Connection!con.opencompanyconnection
+	
+	'Check if tables exist
+	f.Intrinsic.Control.CallSub(checkTables)
+	
+	'Check if the file exists
+	v.Local.bFileCheck.Declare(boolean)
+	v.Local.sFileLocat.Declare(string)
+	v.Local.sSql.Declare(string)
+	v.Local.sWC.Declare(string)
+	v.Local.i.Declare(long)
+	
+	'Populate workcentres from table
+	v.Local.ssql.Set("SELECT rtrim(MACHINE) AS 'WC' FROM V_WORKCENTERS")
+	f.Data.DataTable.CreateFromSQL("dtWC","con",v.Local.ssql)
+	F.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtWC.RowCount--,1)
+		f.Intrinsic.String.Concat(v.Local.sWC,v.DataTable.dtWC(v.Local.i).WC!fieldvaltrim,"*!*",v.Local.sWC)
+	F.Intrinsic.Control.Next(v.Local.i)
+	
+	'Check if the design file exists
+	f.Intrinsic.String.Concat(v.Caller.GasDir,"\",V.Caller.CompanyCode,"_GAB_5380_HT_WC.xml",v.Local.sFileLocat)
+	f.Intrinsic.File.Exists(v.Local.sFileLocat,v.Local.bFileCheck)
+	f.Intrinsic.Control.If(v.Local.bFileCheck)
+		f.Data.DataTable.CreateFromXML("dtD",v.Local.sFileLocat,true)
+	f.Intrinsic.Control.Else
+		f.Data.DataTable.Create("dtD",true)
+		f.Data.DataTable.AddColumn("dtD","Workcentre","String")
+	f.Intrinsic.Control.EndIf
+	
+	'Heat Treatment Config
+	f.Intrinsic.String.Concat(v.Caller.GasDir,"\",V.Caller.CompanyCode,"_GAB_5380_HT_CONFIG.xml",v.Local.sFileLocat)
+	f.Intrinsic.File.Exists(v.Local.sFileLocat,v.Local.bFileCheck)
+	f.Intrinsic.Control.If(v.Local.bFileCheck)
+		f.Data.DataTable.CreateFromXML("dt",v.Local.sFileLocat,true)
+	f.Intrinsic.Control.Else
+		f.Data.DataTable.Create("dt",true)
+		f.Data.DataTable.AddColumn("dt","WatchFolder","String")
+		f.Data.DataTable.AddColumn("dt","TempMoveFolder","String")
+		f.Data.DataTable.AddColumn("dt","FinalMoveFolder","String")
+		f.Data.DataTable.AddColumn("dt","StartNumber","Integer")
+		f.Data.DataTable.AddColumn("dt","BatchID","Integer")
+		f.Data.DataTable.AddColumn("dt","MSDoc","String")
+		f.Data.DataTable.AddColumn("dt","Induction","Integer")
+		f.Data.DataTable.AddRow("dt","StartNumber","100000")
+	f.Intrinsic.Control.EndIf
+	
+		
+	'Set Column Properties
+	'Design Grid Control
+	gui.frmHTConfig.gsgcWC.DataSource("dtD")
+	gui.frmHTConfig.gsgcWC.AddGridviewFromDatatable("gvD","dtD")
+	gui.frmHTConfig.gsgcWC.SetGridviewProperty("gvD","AllowAddRows","True")
+	gui.frmHTConfig.gsgcWC.SetGridviewProperty("gvD","AllowDeleteRows","True")
+	gui.frmHTConfig.gsgcWC.SetColumnProperty("gvD","Workcentre","ReadOnly","False")
+	gui.frmHTConfig.gsgcWC.SetColumnProperty("gvD","Workcentre","AllowEdit","True")
+	'Set Bold
+	gui.frmHTConfig.gsgcWC.SetColumnProperty("gvD","Workcentre","HeaderFontBold","True")
+	'Set drop down list
+	gui.frmHTConfig.gsgcWC.ColumnEdit("gvD","Workcentre","Dropdownlist",v.Local.sWC)
+	'Heat Treat Config Grid
+	gui.frmHTConfig.gsgcRules.DataSource("dt")
+	gui.frmHTConfig.gsgcRules.AddGridviewFromDatatable("gv","dt")
+	gui.frmHTConfig.gsgcRules.anchor(15)
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","WatchFolder","ReadOnly","False")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","WatchFolder","AllowEdit","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","TempMoveFolder","ReadOnly","False")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","TempMoveFolder","AllowEdit","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","FinalMoveFolder","ReadOnly","False")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","FinalMoveFolder","AllowEdit","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","StartNumber","ReadOnly","False")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","StartNumber","AllowEdit","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","BatchID","ReadOnly","False")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","BatchID","AllowEdit","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","MSDoc","ReadOnly","False")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","MSDoc","AllowEdit","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","Induction","ReadOnly","False")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","Induction","AllowEdit","True")
+	'Set Bold
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","WatchFolder","HeaderFontBold","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","TempMoveFolder","HeaderFontBold","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","FinalMoveFolder","HeaderFontBold","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","StartNumber","HeaderFontBold","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","BatchID","HeaderFontBold","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","MSDoc","HeaderFontBold","True")
+	gui.frmHTConfig.gsgcRules.SetColumnProperty("gv","Induction","HeaderFontBold","True")
+	
+	gui.frmHTConfig..Show
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmRuleSetup_UnLoad)
+f.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.frmRuleSetup_UnLoad.Start
+F.Intrinsic.Control.End
+Program.Sub.frmRuleSetup_UnLoad.End
