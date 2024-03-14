@@ -1,0 +1,46 @@
+Program.Sub.ScreenSU.Start
+Gui.frmCustComments..Create
+Gui.frmCustComments..Caption("Customer Comments")
+Gui.frmCustComments..Size(12105,4830)
+Gui.frmCustComments..MinX(0)
+Gui.frmCustComments..MinY(0)
+Gui.frmCustComments..Position(0,0)
+Gui.frmCustComments..BackColor(-2147483633)
+Gui.frmCustComments..MousePointer(0)
+Gui.frmCustComments..Event(UnLoad,frmCustComments_UnLoad)
+Gui.frmCustComments.txtComments.Create(TextboxM)
+Gui.frmCustComments.txtComments.Size(11670,4125)
+Gui.frmCustComments.txtComments.Position(105,45)
+Gui.frmCustComments.txtComments.Enabled(False)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.Intrinsic.Control.Try
+	F.Intrinsic.Control.If(V.Caller.Hook,=,"11560")
+		V.Passed.000203.Set("Comments")
+	F.Intrinsic.Control.ElseIf(V.Caller.Hook,=,"11930")
+		v.Local.ssql.Declare
+		v.Local.sret.Declare
+		f.ODBC.Connection!con.opencompanyconnection
+		f.Intrinsic.String.Build("SELECT TEXT FROM CUST_ORDER_NOTES WHERE CUSTOMER='{0}'",V.Passed.000006,v.Local.ssql)
+		f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sret)
+		gui.frmCustComments.txtComments.Text(v.Local.sret)
+		gui.frmCustComments..Show
+	F.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmCustComments_UnLoad)
+f.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.frmCustComments_UnLoad.Start
+f.Intrinsic.Control.Try
+	f.ODBC.Connection!con.Close
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+f.Intrinsic.Control.EndTry
+Program.Sub.frmCustComments_UnLoad.End
