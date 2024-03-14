@@ -1,0 +1,66 @@
+Program.Sub.ScreenSU.Start
+Gui.frmReprintHTWO..Create
+Gui.frmReprintHTWO..Caption("Reprint HT WO")
+Gui.frmReprintHTWO..Size(4065,1815)
+Gui.frmReprintHTWO..MinX(0)
+Gui.frmReprintHTWO..MinY(0)
+Gui.frmReprintHTWO..Position(0,0)
+Gui.frmReprintHTWO..BackColor(-2147483633)
+Gui.frmReprintHTWO..MousePointer(0)
+Gui.frmReprintHTWO..Event(UnLoad,frmReprintHTWO_UnLoad)
+Gui.frmReprintHTWO.txtJob.Create(TextBox,"",True,1215,300,0,165,120,True,0,"Arial",8,-2147483643,1)
+Gui.frmReprintHTWO.txtSfx.Create(TextBox,"",True,450,300,0,1560,135,True,0,"Arial",8,-2147483643,1)
+Gui.frmReprintHTWO.cmdBrowse.Create(Button)
+Gui.frmReprintHTWO.cmdBrowse.Size(660,375)
+Gui.frmReprintHTWO.cmdBrowse.Position(2145,90)
+Gui.frmReprintHTWO.cmdBrowse.Caption("^")
+Gui.frmReprintHTWO.cmdBrowse.Event(Click,cmdBrowse_Click)
+Gui.frmReprintHTWO.cmdPrint.Create(Button)
+Gui.frmReprintHTWO.cmdPrint.Size(1020,375)
+Gui.frmReprintHTWO.cmdPrint.Position(150,540)
+Gui.frmReprintHTWO.cmdPrint.Caption("Print")
+Gui.frmReprintHTWO.cmdPrint.Event(Click,cmdPrint_Click)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.External.Include.Library("GAB_5380_LIBRARY.lib")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.ODBC.Connection!CON.OPENCOMPANYCONNECTION
+f.Intrinsic.UI.SetBrowserHotTypeAhead(true)
+gui.frmReprintHTWO..Show
+Program.Sub.Main.End
+
+Program.Sub.cmdBrowse_Click.Start
+V.Local.sSQL.Declare(String)
+V.Local.sCol.Declare(String)
+V.Local.sColW.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.sSQL.set("SELECT JOB, SUFFIX, V_CUSTOMER_MASTER.NAME_CUSTOMER, ROUTER, DESCRIPTION, PART, PART_DESCRIPTION FROM V_JOB_HEADER LEFT JOIN V_CUSTOMER_MASTER ON V_JOB_HEADER.CUSTOMER = V_CUSTOMER_MASTER.CUSTOMER")
+'Split Column Names into an array (*!* delimited string)
+F.Intrinsic.String.Split("JOB*!*SUFFIX*!*CUSTOMER*!*ROUTER*!*RTR DESCRIPTION*!*PART*!*PART DESCRIPTION","*!*",V.Local.sCol)
+'Split Column widths into an array (*!* delimited string)
+F.Intrinsic.String.Split("1000*!*800*!*1500*!*1000*!*1500*!*1000*!*1500","*!*",V.Local.sColW)
+F.Intrinsic.UI.Browser("SELECT A JOB","CON",V.Local.sSQL,V.Local.sCol,V.Local.sColW,V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	f.Intrinsic.String.Split(v.Local.sRet,"*!*",v.Local.sRet)
+	Gui.frmReprintHTWO.txtJob.Text(v.Local.sRet(0))
+	gui.frmReprintHTWO.txtSfx.Text(v.Local.sRet(1))
+F.Intrinsic.Control.EndIf
+Program.Sub.cmdBrowse_Click.End
+
+Program.Sub.cmdPrint_Click.Start
+F.Intrinsic.Control.CallSub(PrintHTWO,"WOH",v.Screen.frmReprintHTWO!txtJob.text,"WOS",v.Screen.frmReprintHTWO!txtSfx.text)
+Program.Sub.cmdPrint_Click.End
+
+Program.Sub.frmReprintHTWO_UnLoad.Start
+F.ODBC.Connection!CON.CLOSE
+F.Intrinsic.Control.End
+Program.Sub.frmReprintHTWO_UnLoad.End
+
+
+
+
+
+
