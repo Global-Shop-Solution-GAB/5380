@@ -1,0 +1,764 @@
+Program.Sub.ScreenSU.Start
+Gui.frmHeatTime..Create
+Gui.frmHeatTime..Caption("Apply Heat Treatment Time")
+Gui.frmHeatTime..Size(17805,5880)
+Gui.frmHeatTime..MinX(0)
+Gui.frmHeatTime..MinY(0)
+Gui.frmHeatTime..Position(0,0)
+Gui.frmHeatTime..BackColor(-2147483633)
+Gui.frmHeatTime..MousePointer(0)
+Gui.frmHeatTime..Event(UnLoad,frmHeatTime_UnLoad)
+Gui.frmHeatTime..WindowState(2)
+Gui.frmHeatTime.txtWOScan.Create(TextBox,"",True,2520,300,0,165,270,True,0,"Arial",8,16436871,1)
+Gui.frmHeatTime.txtWOScan.Event(KeyPressEnter,txtWOScan_KeyPressEnter)
+Gui.frmHeatTime.gsgcJobs.Create(GsGridControl)
+Gui.frmHeatTime.gsgcJobs.Size(17310,3585)
+Gui.frmHeatTime.gsgcJobs.Position(135,630)
+Gui.frmHeatTime.gsgcJobs.Event(CellValueChanged,gsgcJobs_CellValueChanged)
+Gui.frmHeatTime.cmdProcess.Create(Button)
+Gui.frmHeatTime.cmdProcess.Size(855,375)
+Gui.frmHeatTime.cmdProcess.Position(120,4905)
+Gui.frmHeatTime.cmdProcess.Caption("Process")
+Gui.frmHeatTime.cmdProcess.Event(Click,cmdProcess_Click)
+Gui.frmHeatTime.lblProgram.Create(Label,"",False,1935,255,0,1995,345,True,0,"Arial",8,-2147483633,0)
+Gui.frmHeatTime.txtWGName.Create(TextBox,"",False,2145,300,0,150,270,False,0,"Arial",8,-2147483643,1)
+Gui.frmHeatTime.cmdBrowseWG.Create(Button)
+Gui.frmHeatTime.cmdBrowseWG.Size(495,375)
+Gui.frmHeatTime.cmdBrowseWG.Position(2370,225)
+Gui.frmHeatTime.cmdBrowseWG.Caption("^")
+Gui.frmHeatTime.cmdBrowseWG.Event(Click,cmdBrowseWG_Click)
+Gui.frmHeatTime.cmdBrowseWG.Enabled(False)
+Gui.frmHeatTime.cmdBrowseWG.Visible(False)
+Gui.frmHeatTime.lblWGCode.Create(Label,"",False,1935,255,0,3060,345,True,0,"Arial",8,-2147483633,0)
+Gui.frmHeatTime.lbl1.Create(Label,"Furnace Work Group:",False,1935,255,0,135,75,True,0,"Arial",8,-2147483633,0)
+Gui.frmHeatTime.ddlWorkcentre.Create(DropDownList)
+Gui.frmHeatTime.ddlWorkcentre.Size(2010,330)
+Gui.frmHeatTime.ddlWorkcentre.Position(135,4500)
+Gui.frmHeatTime.ddlWorkcentre.Event(Click,ddlWorkcentre_Click)
+Gui.frmHeatTime.ddlWorkcentre.Event(LostFocus,ddlWorkcentre_LostFocus)
+Gui.frmHeatTime.lbl2.Create(Label,"Work Centre",True,1935,255,0,120,4305,True,0,"Arial",8,-2147483633,0)
+Gui.frmHeatTime.lblWCCode.Create(Label,"",True,1935,255,0,2325,4575,True,0,"Arial",8,-2147483633,0)
+Gui.frmHeatTime.lbl3.Create(Label,"Barcode Scan Field",True,1935,255,0,135,60,True,0,"Arial",8,-2147483633,0)
+Gui.frmHeatTime.lblEmpNum.Create(Label,"",True,1935,255,0,11595,45,True,0,"Arial",8,-2147483633,0)
+Gui.frmHeatTime.lblEmpName.Create(Label,"",True,1935,255,0,11595,330,True,0,"Arial",8,-2147483633,0)
+Gui.frmTimeInput..Create
+Gui.frmTimeInput..Caption("Time Input")
+Gui.frmTimeInput..Size(6870,1755)
+Gui.frmTimeInput..MinX(0)
+Gui.frmTimeInput..MinY(0)
+Gui.frmTimeInput..Position(0,0)
+Gui.frmTimeInput..BackColor(-2147483633)
+Gui.frmTimeInput..MousePointer(0)
+Gui.frmTimeInput.txtTimeInput.Create(TextBox,"",True,1215,300,0,135,405,True,0,"Arial",8,-2147483643,1)
+Gui.frmTimeInput.txtTimeInput.NumericOnly(1)
+Gui.frmTimeInput.lbl1.Create(Label,"Multiple standard times selected or OP Code is not found, how many hours to apply?",True,6405,255,0,150,150,True,0,"Arial",8,-2147483633,0)
+Gui.frmTimeInput.cmdApply.Create(Button)
+Gui.frmTimeInput.cmdApply.Size(1200,375)
+Gui.frmTimeInput.cmdApply.Position(135,735)
+Gui.frmTimeInput.cmdApply.Caption("Apply")
+Gui.frmTimeInput.cmdApply.Event(Click,cmdApply_Click)
+Gui.frmTimeInput.lblTotKG.Create(Label,"",True,1935,255,0,3525,930,True,0,"Arial",8,-2147483633,0)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+'1 Date
+'2 Emp
+'3 Job
+'4 Suffix
+'5 Seq
+'6 Workcenter
+'7 Hours
+'8 CLosed
+'9 Indirect
+'10 Start Time
+'1 Finish Time
+' 12Rate Ty
+'13GoodPie
+'14 scarp
+'15 scrap code.
+'have to multiply our qty by 10000
+v.Global.sWC.Declare
+v.Global.lShakerHearth.Declare
+v.Global.lInduction.Declare
+V.Local.sFileLocat.Declare
+Program.External.Include.Library("JB0455.lib")
+f.Intrinsic.String.Concat(v.Caller.GasDir,"\",v.Caller.CompanyCode,"_GAB_5380_HT_CONFIG.xml",v.Local.sFileLocat)
+f.Data.DataTable.CreateFromXML("dtConfig",v.Local.sFileLocat,true)
+v.Global.lInduction.Set(v.DataTable.dtConfig(0).Induction!fieldval)
+v.Global.lShakerHearth.Set(v.DataTable.dtConfig(0).ShakerHearth!fieldval)
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'Hook 15962
+'hOOK 15752 (GET VALUE FROM BARCODE SCAN, V.Passed.000007)
+f.Intrinsic.Control.If(v.Caller.Hook,=,"15754")
+	v.Local.sSql.Declare
+	V.Local.sSuff.Declare
+	v.Local.sRet.Declare
+	v.Local.sWG.Declare
+	v.Local.sWGDesc.Declare
+	v.Local.sWC.Declare
+	V.Local.sFileLocat.Declare
+	v.Local.sSearch.Declare
+	v.Local.bFileCheck.Declare
+	V.Local.sWOStrng.Declare
+	
+	v.Local.sWC.Set(v.Passed.009003)
+	f.Intrinsic.String.Concat(v.Caller.GasDir,"\",V.Caller.CompanyCode,"_GAB_5380_HT_WC.xml",v.Local.sFileLocat)
+	f.Intrinsic.File.Exists(v.Local.sFileLocat,v.Local.bFileCheck)
+	f.Intrinsic.Control.If(v.Local.bFileCheck)
+		f.Data.DataTable.CreateFromXML("dtD",v.Local.sFileLocat,true)
+		f.Intrinsic.String.Build("Workcentre='{0}'",v.Local.sWC,v.Local.sSearch)
+		f.Data.DataTable.Select("dtD",v.Local.sSearch,v.Local.sRet)
+		f.Intrinsic.Control.If(v.Local.sRet.Trim,<>,"***NORETURN***")
+			f.ODBC.Connection!con.OpenCompanyConnection(60)
+			'Find out Workgroup
+			f.Intrinsic.String.Build("SELECT WORKGROUP FROM V_WORKGROUP_LINE WHERE WORKCENTER='{0}'",V.Local.sWC,V.Local.sSql)
+			f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.sWG)
+			
+			'Find out Workgroup Name
+			f.Intrinsic.String.Build("SELECT DESCR FROM V_WORKGROUP_HEAD WHERE WORK_GROUP='{0}'",V.Local.sWG,V.Local.sSql)
+			f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.sWGDesc)
+			f.Intrinsic.Control.CallSub(preloadDt,"WGCode",v.Local.sWG,"WGName",v.Local.sWGDesc)
+			f.Intrinsic.Control.If(v.Passed.009991,=,"")
+				v.Local.sSuff.Set("   ")
+			f.Intrinsic.Control.Else
+				v.Local.sSuff.Set(v.Passed.009991)
+			f.Intrinsic.Control.EndIf
+			gui.frmHeatTime..Show
+			f.Intrinsic.Control.CallSub(loadDt,"Job",v.Passed.009990,"Suffix",v.local.sSuff,"Seq",v.Passed.009992)
+			f.Intrinsic.String.Concat(v.Passed.009990,v.Local.sSuff,v.Passed.009992,v.Local.sWOStrng)
+			gui.frmHeatTime.txtWOScan.Text(v.Local.sWOStrng)
+			f.Intrinsic.Control.CallSub(txtWOScan_KeyPressEnter)
+			gui.frmHeatTime.lblEmpNum.Caption(v.Passed.009993)
+			gui.frmHeatTime.lblEmpName.Caption(v.Passed.009994)
+			
+			'Load the form
+			v.Passed.777777.Set(true)
+			gui.frmHeatTime.gsgcJobs.anchor(15)
+			gui.frmHeatTime.cmdProcess.anchor(6)
+			gui.frmHeatTime.ddlWorkcentre.anchor(6)
+			gui.frmHeatTime.lblWCCode.anchor(6)
+			
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.loadDt.Start
+v.Local.i.Declare
+v.Local.ssql.Declare
+V.Local.sSequ.Declare
+V.Local.sJobH.Declare
+V.Local.sSuff.Declare
+v.Local.sSplt.Declare
+v.Local.sProg.Declare
+
+f.Intrinsic.Control.If(v.DataTable.dt.Exists)
+	f.Data.DataTable.Close("dt")
+f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.If(v.DataTable.dtJobs.Exists)
+	f.Data.DataTable.Close("dtJobs")
+f.Intrinsic.Control.EndIf
+
+'f.Intrinsic.String.Build("select If(V_JOB_OPERATIONS.JOB='{1}' AND V_JOB_OPERATIONS.SUFFIX='{2}' AND V_JOB_OPERATIONS.SEQ='{3}', convert(1,SQL_BIT), convert(0,SQL_BIT) ) as 'Select', v_JOB_OPERATIONS.UNITS_OPEN - V_JOB_OPERATIONS.UNITS_COMPLETE as 'GoodPieces', 0 as 'BadPieces', V_JOB_OPERATIONS.OPERATION AS 'Operation',  V_JOB_HEADER.JOB as 'Job', V_JOB_HEADER.SUFFIX as 'Suffix', V_JOB_OPERATIONS.SEQ AS 'Seq', V_JOB_HEADER.ROUTER as 'Router', V_JOB_HEADER.DESCRIPTION as 'Description', V_JOB_OPERATIONS.CODE_SORT_OPER, V_JOB_HEADER.PART as 'Part', V_JOB_HEADER.PART_DESCRIPTION, V_JOB_OPERATIONS.UNITS_OPEN, V_JOB_OPERATIONS.UNITS_COMPLETE, V_JOB_OPERATIONS.UNITS_OPEN - V_JOB_OPERATIONS.UNITS_COMPLETE AS 'UnitsRemain',    (SELECT IF(RTRIM(LBS)='',0,LBS) AS 'KG' FROM V_INVENTORY_ALL WHERE V_INVENTORY_ALL.PART=V_JOB_HEADER.PART), V_JOB_OPERATIONS.DATE_DUE  from V_JOB_OPERATIONS LEFT JOIN V_JOB_HEADER ON V_JOB_HEADER.JOB = V_JOB_OPERATIONS.JOB AND V_JOB_HEADER.SUFFIX = V_JOB_OPERATIONS.SUFFIX WHERE LMO='L' AND V_JOB_OPERATIONS.PART='{0}' AND SEQ <>'996000' AND DATE_COMPLETED='1900-01-01'",v.Screen.frmHeatTime!lblWGCode.Caption,v.Args.Job,v.Args.Suffix,v.Args.Seq,v.Local.ssql)
+f.Intrinsic.String.Build("select If(V_JOB_OPERATIONS.JOB='{1}' AND V_JOB_OPERATIONS.SUFFIX='{2}' AND V_JOB_OPERATIONS.SEQ='{3}', convert(1,SQL_BIT), convert(0,SQL_BIT) ) as 'Select', v_JOB_OPERATIONS.UNITS_OPEN - V_JOB_OPERATIONS.UNITS_COMPLETE as 'GoodPieces', 0 as 'BadPieces', V_JOB_OPERATIONS.OPERATION AS 'Operation',  V_JOB_HEADER.JOB as 'Job', V_JOB_HEADER.SUFFIX as 'Suffix', V_JOB_OPERATIONS.SEQ AS 'Seq', V_JOB_HEADER.ROUTER as 'Router', V_JOB_HEADER.DESCRIPTION as 'Description', V_JOB_OPERATIONS.CODE_SORT_OPER, V_JOB_HEADER.PART as 'Part', V_JOB_HEADER.PART_DESCRIPTION, V_JOB_OPERATIONS.UNITS_OPEN, V_JOB_OPERATIONS.UNITS_COMPLETE, V_JOB_OPERATIONS.UNITS_OPEN - V_JOB_OPERATIONS.UNITS_COMPLETE AS 'UnitsRemain',    (SELECT IF(RTRIM(LBS)='',0,LBS) AS 'KG' FROM V_INVENTORY_ALL WHERE V_INVENTORY_ALL.PART=V_JOB_HEADER.PART), V_JOB_OPERATIONS.DATE_DUE  from V_JOB_OPERATIONS LEFT JOIN V_JOB_HEADER ON V_JOB_HEADER.JOB = V_JOB_OPERATIONS.JOB AND V_JOB_HEADER.SUFFIX = V_JOB_OPERATIONS.SUFFIX WHERE LMO='L' AND V_JOB_OPERATIONS.PART='{0}' AND SEQ <>'996000' ",v.Screen.frmHeatTime!lblWGCode.Caption,v.Args.Job,v.Args.Suffix,v.Args.Seq,v.Local.ssql)
+
+f.Data.DataTable.CreateFromSQL("dt","con",v.Local.ssql,true)
+f.Data.DataTable.Clone("dt","dtJobs",true)
+f.Data.DataTable.AddColumn("dt","Notes","String")
+f.Data.DataTable.AddColumn("dtJobs","Notes","String")
+gui.frmHeatTime.gsgcJobs.visible(false)
+gui.frmHeatTime.gsgcJobs.DataSource("dtJobs")
+F.Data.DataView.Create("dtJobs","dv",22,"","Select DESC")
+f.Intrinsic.Control.CallSub(setproperties)
+Program.Sub.loadDt.End
+
+Program.Sub.setProperties.Start
+gui.frmHeatTime.gsgcJobs.AddGridviewFromDataview("gv","dtJobs","dv")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Seq","Visible","False")
+
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Select","ReadOnly","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Select","AllowEdit","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Notes","ReadOnly","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Notes","AllowEdit","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","GoodPieces","ReadOnly","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","GoodPieces","AllowEdit","True")
+
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Operation","ReadOnly","FALSE")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Operation","AllowEdit","TRUE")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Job","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Job","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Suffix","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Suffix","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Router","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Router","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Description","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Description","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","KG","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","KG","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Part","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Part","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Open","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Open","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Complete","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Complete","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","UnitsRemain","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","UnitsRemain","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Part_Description","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Part_Description","AllowEdit","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Date_Due","ReadOnly","True")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Date_Due","AllowEdit","False")
+
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Date_Due","Displaycustomdatetime","d")
+
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Part_Description","Caption","WO Description")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Date_Due","Caption","Due Date")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Open","Caption","Total Pieces")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Complete","Caption","Compl. Pieces")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","UnitsRemain","Caption","Remain. Pieces")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","GoodPieces","Caption","Good Pieces")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","BadPieces","Caption","Bad Pieces")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","KG","Caption","KG/cm2")
+
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Select","MinWidth","60")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Operation","MinWidth","80")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Job","MinWidth","60")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Suffix","MinWidth","30")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Router","MinWidth","100")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Description","MinWidth","170")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","KG","MinWidth","60")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Part","MinWidth","100")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Part_Description","MinWidth","150")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Date_Due","MinWidth","70")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Notes","MinWidth","300")
+
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Select","Visible","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","DATE_DUE","Visible","False")
+
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Part","Visible","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","CODE_SORT_OPER","Visible","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Complete","Visible","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Open","Visible","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","UnitsRemain","Visible","False")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Complete","MinWidth","60")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","Units_Open","MinWidth","60")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","UnitsRemain","MinWidth","60")
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","GoodPieces","MinWidth","60")
+
+gui.frmHeatTime.gsgcJobs.SetColumnProperty("gv","GoodPieces","Displaycustomnumeric","###")
+gui.frmHeatTime.gsgcJobs.visible(True)
+Program.Sub.setProperties.End
+
+Program.Sub.cmdBrowseWG_Click.Start
+V.Local.sSQL.Declare(String)
+V.Local.sCol.Declare(String)
+V.Local.sColW.Declare(String)
+V.Local.sRet.Declare(String)
+v.Local.i.Declare(long)
+V.Local.sSQL.set("SELECT WORK_GROUP, DESCR FROM V_WORKGROUP_HEAD")
+'Split Column Names into an array (*!* delimited string)
+F.Intrinsic.String.Split("WG*!*Description","*!*",V.Local.sCol)
+'Split Column widths into an array (*!* delimited string)
+F.Intrinsic.String.Split("500*!*3000","*!*",V.Local.sColW)
+F.Intrinsic.UI.Browser("Select a Work Group","con",V.Local.sSQL,V.Local.sCol,V.Local.sColW,V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	f.Intrinsic.String.Split(v.Local.sRet,"*!*",v.Local.sRet)
+	f.Intrinsic.Control.CallSub(preloadDt,"WGCode",v.Local.sRet(0),"WGName",v.Local.sRet(1))
+	f.Intrinsic.Control.CallSub(loadDt)
+F.Intrinsic.Control.EndIf
+Program.Sub.cmdBrowseWG_Click.End
+
+Program.Sub.preloadDt.Start
+v.Local.ssql.Declare
+v.Local.i.Declare(long)
+gui.frmHeatTime.lblWGCode.Caption(v.Args.WGCode)
+gui.frmHeatTime.txtWGName.Text(v.Args.WGName)
+f.Intrinsic.Control.If(v.DataTable.dtWC.Exists)
+	f.Data.DataTable.Close("dtWC")
+f.Intrinsic.Control.EndIf
+f.Intrinsic.String.Build("SELECT WORKCENTER, (SELECT WC_NAME FROM V_WORKCENTERS WHERE MACHINE=V_WORKGROUP_LINE.WORKCENTER) AS 'Description' FROM V_WORKGROUP_LINE WHERE WORKGROUP='{0}'",V.args.WGCode,V.Local.sSQL)
+f.Data.DataTable.CreateFromSQL("dtWC","con",v.Local.sSQL,true)
+gui.frmHeatTime.ddlWorkcentre.ClearItems
+
+f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtWC.RowCount--,1)
+	gui.frmHeatTime.ddlWorkcentre.AddItem(V.DataTable.dtWC(V.Local.i).DESCRIPTION!FIELDVAL)
+f.Intrinsic.Control.Next(v.Local.i)
+Program.Sub.preloadDt.End
+
+Program.Sub.gsgcJobs_CellValueChanged.Start
+f.Intrinsic.Control.If(v.Args.column,=,"GoodPieces")
+	f.Data.DataTable.SetValue("dt",v.Args.rowindex,"Select",true)
+f.Intrinsic.Control.EndIf
+Program.Sub.gsgcJobs_CellValueChanged.End
+
+Program.Sub.ddlWorkcentre_Click.Start
+v.Local.ssql.Declare
+v.Local.sWC.Declare
+f.Intrinsic.String.Build("SELECT MACHINE FROM V_WORKCENTERS WHERE WC_NAME='{0}'",V.Screen.frmHeatTime!ddlWorkcentre.Value,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sWC)
+gui.frmHeatTime.lblWCCode.Caption(v.Local.swc)
+'GUI.frmHeatTime.cmdProcess.SetFocus(1)
+Program.Sub.ddlWorkcentre_Click.End
+
+Program.Sub.txtWOScan_KeyPressEnter.Start
+f.Intrinsic.Control.Try
+	v.Local.sText.Declare
+	v.Local.sWO.Declare
+	v.Local.sSuff.Declare
+	v.Local.sSeq.Declare
+	v.Local.sRet.Declare
+	V.Local.sChk.Declare
+	v.Local.sSearch.Declare
+	v.Local.sOpr.Declare
+	v.Local.sRtr.Declare
+	v.Local.sRDs.Declare
+	v.Local.sCSO.Declare
+	v.Local.sPrt.Declare
+	v.Local.sPDs.Declare
+	v.Local.fUNO.Declare
+	v.Local.fUNC.Declare
+	v.Local.fUNR.Declare
+	v.Local.fKGW.Declare
+	v.Local.fGPc.Declare
+	v.Local.dDtD.Declare
+	
+	v.local.sText.Set(v.Screen.frmHeatTime!txtWOScan.text)
+	f.Intrinsic.String.Replace(v.Local.sText,"$","",v.Local.sText)
+	f.Intrinsic.String.Replace(v.Local.sText,"%","",v.Local.sText)
+	f.Intrinsic.String.Left(v.Local.sText,6,v.Local.sWO)
+	f.Intrinsic.String.Right(v.Local.sText,6,v.Local.sSeq)
+	f.Intrinsic.String.Mid(v.Local.sText,7,3,v.Local.sSuff)
+	f.Intrinsic.String.Build("Job='{0}' and Suffix='{1}' and Seq='{2}'",v.Local.sWO.Trim,v.Local.sSuff.Trim,v.Local.sSeq.Trim,v.Local.sSearch)
+	f.Data.DataTable.Select("dt",v.Local.sSearch,v.Local.sRet)
+	f.Intrinsic.String.Build("Job='{0}' and Suffix='{1}' and Seq='{2}'",v.Local.sWO.Trim,v.Local.sSuff.Trim,v.Local.sSeq.Trim,v.Local.sSearch)
+	f.Data.DataTable.Select("dtJobs",v.Local.sSearch,v.Local.sChk)
+	f.Intrinsic.Control.If(v.Local.sRet.Trim,<>,"***NORETURN***")
+	f.Intrinsic.Control.AndIf(v.Local.sChk.Trim,=,"***NORETURN***")
+		v.Local.fGPC.Set(v.DataTable.dt(v.Local.sRet).GoodPieces!Fieldval)
+		v.Local.sOpr.Set(v.DataTable.dt(v.Local.sRet).Operation!fieldvaltrim)
+		v.Local.sRtr.Set(v.DataTable.dt(v.Local.sret).Router!fieldvaltrim)
+		v.Local.sRDs.Set(v.DataTable.dt(v.Local.sRet).Description!fieldvaltrim)
+		v.Local.sCSO.Set(v.DataTable.dt(v.Local.sRet).CODE_SORT_OPER!FIELDVALTRIM)
+		v.Local.sPrt.Set(v.DataTable.dt(v.Local.sRet).Part!fieldvaltrim)
+		v.Local.sPDs.Set(v.DataTable.dt(v.Local.sRet).PART_DESCRIPTION!FIELDVALTRIM)
+		v.Local.fUNO.Set(v.DataTable.dt(v.Local.sRet).UNITS_OPEN!FIELDVAL)
+		v.Local.fUNC.Set(v.DataTable.dt(v.Local.sRet).UNITS_COMPLETE!FIELDVAL)
+		v.Local.fUNR.Set(v.DataTable.dt(v.Local.sRet).UnitsRemain!fieldval)
+		v.Local.fKGW.Set(v.DataTable.dt(v.Local.sRet).KG!Fieldval)
+		v.Local.dDtD.Set(v.DataTable.dt(v.Local.sRet).DATE_DUE!Fieldval)
+		f.Data.DataTable.AddRow("dtJobs","Select","True","GoodPieces",v.Local.fGPc,"BadPieces",0,"Operation",v.Local.sOpr,"Job",v.Local.sWO,"Suffix",v.Local.sSuff,"Seq",v.Local.sSeq,"Router",v.Local.sRtr,"Description",v.Local.sRDs,"CODE_SORT_OPER",v.Local.sCSO,"Part",v.Local.sPrt,"Part_Description",v.Local.sPDs,"Units_Open",V.Local.fUNO,"Units_Complete",v.Local.fUNC,"UnitsRemain",v.Local.fUNR,"KG",v.Local.fKGW,"DATE_DUE",v.Local.dDtD)
+		'f.Data.DataTable.SetValue("dt",v.Local.sRet,"Select",True)
+	f.Intrinsic.Control.Else
+		f.Intrinsic.UI.Msgbox("Job sequence does not exist in this furnace's workgroup or job scanned twice.")
+	f.Intrinsic.Control.EndIf
+	gui.frmHeatTime.txtWOScan.Text("")
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.CallSub(frmHeatTime_UnLoad)
+f.Intrinsic.Control.EndTry
+Program.Sub.txtWOScan_KeyPressEnter.End
+
+Program.Sub.cmdProcess_Click.Start
+gui.frmHeatTime..Enabled(False)
+GUI.frmHeatTime.cmdProcess.Enabled(False)
+v.Local.i.Declare(long)
+v.Local.fKGTt.Declare
+v.Local.fKGtemp.Declare
+v.Local.sWrkC.Declare
+v.Local.sWrkG.Declare
+v.Local.sMsgs.Declare
+v.Local.sCSOM.Declare
+v.Local.sKeyW.Declare
+v.Local.sSql.Declare
+v.Local.fWt.Declare
+v.Local.fOpen.Declare
+v.Local.fTime.Declare
+
+'Set Variables
+v.Local.sWrkC.Set(v.Screen.frmHeatTime!lblWCCode.Caption)
+v.Local.sWrkG.Set(v.Screen.frmHeatTime!lblWGCode.Caption)
+v.Local.sKeyW.Set("Part")
+
+'Check Workcentre
+F.Intrinsic.Control.If(V.Local.sWrkC.Trim,=,"")
+	F.Intrinsic.UI.Msgbox("Workcentre is blank, please select a workcentre, routine will now exit.")
+	gui.frmHeatTime..Enabled(True)
+	f.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+'Operations
+f.Data.DataTable.Create("dtOpers",true)
+f.Data.DataTable.AddColumn("dtOpers","Operation","string")
+
+'Get KG Total
+f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtJobs.RowCount--,1)
+	f.Intrinsic.Control.If(v.DataTable.dtJobs(v.Local.i).Select!fieldval)
+		v.Local.sCSOM.Set(v.DataTable.dtJobs(v.Local.i).CODE_SORT_OPER!FIELDVALTRIM)
+		f.Intrinsic.Control.If(v.Local.sCSOM.UCase,=,"MULTI")
+			v.Local.sKeyW.Set("Multi")
+			f.Intrinsic.String.Build("SELECT USER1 FROM GAB_4912_USER_FIELDS WHERE PART='{0}'",v.DataTable.dtJobs(v.Local.i).PART!FIELDVALTRIM,v.Local.ssql)
+			f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.fWt)
+			f.Data.DataTable.SetValue("dtJobs",v.Local.i,"KG",v.Local.fWt)
+		f.Intrinsic.Control.Else
+			v.Local.sKeyW.Set("Part")
+		f.Intrinsic.Control.EndIf
+		f.Intrinsic.Control.If(v.DataTable.dtJobs(v.Local.i).GoodPieces!fieldvalfloat,=,0)
+			f.Intrinsic.String.Concat("GOOD piece count is zero, reported for work order ",v.DataTable.dtJobs(v.Local.i).JOB!FIELDVALTRIM,"-",V.DataTable.dtJobs(V.Local.i).SUFFIX!FIELDVALTRIM,v.Local.sMsgs)
+			f.Intrinsic.UI.Inputbox(v.Local.sMsgs,V.Local.sMsgs,"",v.Local.fOpen)
+			f.Data.DataTable.setvalue("dtJobs",v.Local.i,"GoodPieces",v.Local.fopen)
+		f.Intrinsic.Control.EndIf
+		f.Intrinsic.Control.If(v.DataTable.dtJobs(v.Local.i).KG!Fieldvalfloat,=,0)
+			f.Intrinsic.String.Concat(v.Local.sKeyW, " weight is zero for ",v.DataTable.dtJobs(v.Local.i).PART!FIELDVALTRIM,v.Local.sMsgs)
+			f.Intrinsic.UI.Inputbox(v.Local.sMsgs,V.Local.sMsgs,"",v.Local.fWt)
+			f.Data.DataTable.SetValue("dt",v.Local.i,"KG",v.Local.fwt)
+		f.Intrinsic.Control.EndIf
+		f.Intrinsic.Control.If(v.DataTable.dtJobs(v.Local.i).Units_Open!fieldval,=,0)
+			f.Intrinsic.String.Concat("OPEN piece count is zero, reported for work order ",v.DataTable.dtJobs(v.Local.i).JOB!FIELDVALTRIM,"-",V.DataTable.dtJobs(V.Local.i).SUFFIX!FIELDVALTRIM,v.Local.sMsgs)
+			f.Intrinsic.UI.Inputbox(v.Local.sMsgs,v.Local.sMsgs,"",v.Local.fOpen)
+			f.Data.DataTable.setvalue("dt",v.Local.i,"Units_open",v.Local.fopen)
+		f.Intrinsic.Control.EndIf
+		f.Data.DataTable.AddRow("dtOpers","Operation",v.DataTable.dtJobs(v.Local.i).Operation!fieldvaltrim)
+		'DO THE MULTIPLICATION
+		f.Intrinsic.Math.Mult(v.DataTable.dtJobs(v.Local.i).KG!FIELDVAL,v.DataTable.dtJobs(v.Local.i).GoodPieces!fieldvalfloat,v.Local.fKGtemp)
+		f.Intrinsic.Math.Add(v.Local.fKGTt,v.Local.fKGtemp,v.Local.fKGTt)	
+		
+		'f.Intrinsic.Math.Add(v.Local.fKGTt,v.DataTable.dtJobs(v.Local.i).KG!FIELDVAL,v.Local.fKGTt)	
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Next(v.Local.i)
+
+'Datatable Distinct
+f.Data.DataView.Create("dtOpers","dvOpers")
+f.Data.DataView.ToDatatableDistinct("dtOpers","dvOpers","dtAllOpers","Operation",false)
+
+
+	
+'If greater than 1, which hourly value?
+f.Intrinsic.Control.If(v.DataTable.dtAllOpers.RowCount,>,1)
+	gui.frmTimeInput.lblTotKG.Caption(v.Local.fKGTt)
+	gui.frmTimeInput..Show
+f.Intrinsic.Control.Else
+	'Findout if op code is missing 0
+	F.Intrinsic.Control.If(v.DataTable.dtAllOpers.RowCount,=,1)
+		f.Intrinsic.String.Build("SELECT ifnull(STANDARD_SETUP,0) FROM V_OP_CODES WHERE OPERATION='{0}'",v.DataTable.dtAllOpers(0).Operation!fieldvaltrim,v.Local.ssql)
+		f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.local.fTime)
+		f.Intrinsic.Control.If(v.Local.ftime,=,0)
+			gui.frmTimeInput.lblTotKG.Caption(v.Local.fKGTt)
+			gui.frmTimeInput..Show
+		F.Intrinsic.Control.Else
+			f.Intrinsic.Control.CallSub(ProcessLabour,"KGTt",v.Local.fKGTt)
+			gui.frmTimeInput.visible(false)
+		f.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+f.Intrinsic.Control.EndIf
+Program.Sub.cmdProcess_Click.End
+
+Program.Sub.cmdApply_Click.Start
+v.Local.fKGTt.Declare
+v.Local.fKGTt.Set(v.Screen.frmTimeInput!lblTotKG.Caption)
+f.Intrinsic.Control.CallSub(ProcessLabour,"KGTt",v.Local.fKGTt)
+Program.Sub.cmdApply_Click.End
+
+Program.Sub.ProcessLabour.Start
+v.Local.ssql.Declare
+v.Local.sProg.Declare
+v.Local.sEmpl.Declare
+v.Local.sJobH.Declare
+v.Local.sSuff.Declare
+v.Local.sSequ.Declare
+v.Local.sWrkC.Declare
+v.Local.sWrkG.Declare
+v.Local.sHour.Declare
+v.Local.sClsd.Declare
+v.Local.sIDir.Declare
+v.Local.sStrt.Declare
+v.Local.sFinh.Declare
+v.Local.sType.Declare
+v.Local.sCode.Declare
+v.Local.sSplt.Declare
+v.Local.sDate.Declare
+v.Local.sGood.Declare
+v.Local.sScrp.Declare
+v.Local.sFile.Declare
+v.Local.sLine.Declare
+v.Local.sMins.Declare
+v.Local.sOper.Declare
+v.Local.sMsgs.Declare
+v.Local.sPref.Declare
+v.Local.sPre2.Declare
+V.Local.sPre3.Declare
+
+v.Local.sPart.Declare
+v.Local.sPDes.Declare
+v.Local.sDesc.Declare
+v.Local.dDDte.Declare
+v.Local.sProc.Declare
+v.Local.sNote.Declare
+v.Local.sRout.Declare
+v.Local.sNmeE.Declare
+v.Local.sNumE.Declare
+
+v.Local.sSTme.Declare
+v.Local.sETme.Declare
+
+v.Local.sAll.Declare
+v.Local.sGAB.Declare
+
+v.Local.lStr.Declare
+v.Local.lRun.Declare
+
+v.Local.dDate.Declare
+V.Local.dDtTm.Declare
+
+v.Local.fGood.Declare
+v.Local.fBadP.Declare
+v.Local.fHour.Declare
+v.Local.fMins.Declare
+v.Local.fScrp.Declare
+v.Local.fTime.Declare
+v.Local.fCalc.Declare
+v.Local.fTtlP.Declare
+v.Local.fComp.Declare
+v.Local.fKGTt.Declare
+v.Local.fPerc.Declare
+V.Local.fEsKG.Declare
+v.Local.fWt.Declare
+
+v.Local.bFile.Declare
+
+v.Local.i.Declare
+v.Local.fScrp.Set(0)
+v.Local.sCode.Set("01")
+v.Local.sIDir.Set("D")
+v.Local.sType.Set("L")
+v.Local.sStrt.set("0001 ")
+v.Local.sFinh.Set("0000 ")
+V.Local.sEmpl.Set("99999")
+v.Local.dDate.Set(v.Ambient.Date)
+v.Local.dDtTm.Set(v.Ambient.Now)
+v.Local.sWrkC.Set(v.Screen.frmHeatTime!lblWCCode.Caption)
+v.Local.sWrkG.Set(v.Screen.frmHeatTime!lblWGCode.Caption)
+v.Local.sNumE.Set(v.Screen.frmHeatTime!lblEmpNum.Caption)
+v.Local.sNmeE.Set(v.Screen.frmHeatTime!lblEmpName.Caption)
+v.Local.fKGTt.Set(v.Args.KGTt)
+
+'Get XML Batch RunID data
+f.Intrinsic.String.Concat(v.Caller.GasDir,"",V.Caller.CompanyCode,"_GAB_5380_HT_RUNID.txt",v.Local.sFile)
+'f.Intrinsic.File.Exists(v.Local.sFile,v.Local.bFile)
+'f.Intrinsic.Control.If(v.DataTable.dtConfig.Exists)
+'	f.Data.DataTable.Close("dtConfig")
+'f.Intrinsic.Control.EndIf
+'f.Intrinsic.Control.If(v.Local.bFile)
+'	f.Data.DataTable.CreateFromXML("dtConfig",v.Local.sFile,true)
+'f.Intrinsic.Control.EndIf
+F.Intrinsic.File.File2String(V.Local.sFile,V.Local.lRun)
+'v.Local.lRun.Set(v.DataTable.dtConfig(0).BatchID!fieldval)
+
+'Add 1 and write it back to the config file
+f.Intrinsic.Math.Add(v.Local.lRun,1,v.Local.lRun)
+F.Intrinsic.File.String2File(V.Local.sFile,V.Local.lRun)
+'f.Data.DataTable.SetValue("dtConfig",0,"BatchID",v.Local.lRun)
+'f.Data.DataTable.SaveToXML("dtConfig",0,true,v.Local.sFile)
+
+'Get time
+f.Intrinsic.Control.If(v.Screen.frmTimeInput!txtTimeInput.text,=,"")
+	f.Intrinsic.String.Build("SELECT STANDARD_SETUP FROM V_OP_CODES WHERE OPERATION='{0}'",v.DataTable.dtOpers(0).Operation!fieldvaltrim,v.Local.ssql)
+	f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.local.fTime)
+f.Intrinsic.Control.Else
+	v.Local.fTime.Set(v.Screen.frmTimeInput!txtTimeInput.text)
+f.Intrinsic.Control.EndIf
+
+'Format Date
+f.Intrinsic.String.Format(v.Local.dDate,"MMDDYY",v.Local.sDate)
+
+'mAKE DATA DISTINCT
+f.Data.DataView.Create("dtJobs","dvJobs")
+f.Data.DataView.ToDataTableDistinct("dtJobs","dvjobs","dtJobsDistinct","Job*!*Suffix*!*Seq*!*Notes*!*Part_Description*!*Part*!*Description*!*Date_Due*!*Router*!*KG*!*GoodPieces*!*BadPieces*!*Units_Open*!*Units_Complete")
+
+'Loop through Values
+f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtJobsDistinct.RowCount--,1)
+	'Set the job
+	v.Local.sJobH.Set(v.DataTable.dtJobsDistinct(v.Local.i).Job!fieldvaltrim)
+	v.Local.sSuff.Set(v.DataTable.dtJobsDistinct(v.Local.i).Suffix!fieldvaltrim)
+	v.Local.sSequ.Set(v.DataTable.dtJobsDistinct(v.Local.i).Seq!fieldvaltrim)
+	v.Local.sNote.Set(v.DataTable.dtJobsDistinct(v.Local.i).Notes!fieldvaltrim)
+	v.Local.sPDes.Set(v.DataTable.dtJobsDistinct(v.Local.i).Part_Description!fieldvaltrim)
+	v.Local.sPart.Set(v.DataTable.dtJobsDistinct(v.Local.i).Part!fieldvaltrim)
+	v.Local.sDesc.Set(v.DataTable.dtJobsDistinct(v.Local.i).Description!fieldvaltrim)
+	v.Local.dDDte.Set(v.DataTable.dtJobsDistinct(v.Local.i).Date_Due!fieldval)
+	v.Local.sRout.Set(v.DataTable.dtJobsDistinct(v.Local.i).Router!fieldvaltrim)
+	'v.Local.fWT.Set(v.DataTable.dtJobsDistinct(v.Local.i).KG!Fieldval)
+	'Multiply the total out
+	F.Intrinsic.Math.Mult(v.DataTable.dtJobsDistinct(v.Local.i).KG!Fieldval,v.DataTable.dtJobsDistinct(v.Local.i).GoodPieces!FIELDVALFLOAT,v.Local.fWt)
+	'Set the piece count and time
+	v.Local.fGood.Set(v.DataTable.dtJobsDistinct(v.Local.i).GoodPieces!FIELDVALFLOAT)
+	v.Local.fBadP.Set(v.DataTable.dtJobsDistinct(v.Local.i).BadPieces!fieldvalfloat)
+	
+	'Calculate percent
+	'Determine if Induction harden by looking at the prefix
+	f.Intrinsic.Control.If(v.Local.sWrkG.Trim,=,"HIH")
+		f.Intrinsic.Control.If(v.Local.fWt,<>,0)
+		f.Intrinsic.Control.AndIf(v.Global.lInduction,<>,0)
+			f.Intrinsic.Math.Mult(v.Local.fWt,v.Local.fGood,v.Local.fWt)
+			f.Intrinsic.Math.Div(v.Local.fWt,v.Global.lInduction,v.Local.fHour)
+			f.Intrinsic.Math.Round(v.Local.fHour,4,v.Local.fHour)
+		f.Intrinsic.Control.Else
+			f.Intrinsic.String.Concat("Fatal Error, part cm2 is 0. Will need to reprocess transaction.  Job is ", v.DataTable.dtJobsDistinct(v.Local.i).Job!fieldvaltrim,"-",v.DataTable.dtJobsDistinct(v.Local.i).Suffix!fieldvaltrim,v.Local.sMsgs)
+			f.Intrinsic.UI.Msgbox(v.Local.sMsgs)
+			f.Intrinsic.Control.CallSub(frmHeatTime_unload)
+		f.Intrinsic.Control.EndIf
+	'Shaker Hearth
+	f.Intrinsic.Control.ElseIf(v.Local.sWrkG.Trim,=,"HSH")
+		f.Intrinsic.Control.If(v.Local.fWt,<>,0)
+		f.Intrinsic.Control.AndIf(v.Global.lShakerHearth,<>,0)
+			'f.Intrinsic.Math.Mult(v.Local.fWt,v.Local.fGood,v.Local.fWt)
+			f.Intrinsic.Math.Div(v.Local.fWt,v.Global.lShakerHearth,v.Local.fHour)
+			f.Intrinsic.Math.Round(v.Local.fHour,4,v.Local.fHour)
+		f.Intrinsic.Control.Else
+			f.Intrinsic.String.Concat("Fatal Error, part kg is 0. Will need to reprocess transaction.  Job is ", v.DataTable.dtJobsDistinct(v.Local.i).Job!fieldvaltrim,"-",v.DataTable.dtJobsDistinct(v.Local.i).Suffix!fieldvaltrim,v.Local.sMsgs)
+			f.Intrinsic.UI.Msgbox(v.Local.sMsgs)
+			f.Intrinsic.Control.CallSub(frmHeatTime_unload)
+		f.Intrinsic.Control.EndIf
+	'It's a normal heat treatment
+	F.intrinsic.Control.Else
+		f.Intrinsic.Control.If(v.Local.fWt,<>,0)
+		f.Intrinsic.Control.AndIf(v.Local.fKGTt,<>,0)
+			f.Intrinsic.Math.Div(v.Local.fWt,v.Local.fKGTt,v.Local.fPerc)
+		F.Intrinsic.Control.Else
+			f.Intrinsic.String.Concat("Fatal Error, part weight is 0. Will need to reprocess transaction.  Job is ", v.DataTable.dtJobsDistinct(v.Local.i).Job!fieldvaltrim,"-",v.DataTable.dtJobsDistinct(v.Local.i).Suffix!fieldvaltrim,v.Local.sMsgs)
+			f.Intrinsic.UI.Msgbox(v.Local.sMsgs)
+			f.Intrinsic.Control.CallSub(frmHeatTime_unload)
+		f.Intrinsic.Control.EndIf
+		'Calculate hours by prorated percent
+		f.Intrinsic.Math.Mult(v.Local.fTime,v.Local.fPerc,v.Local.fHour)
+		f.Intrinsic.Math.Round(v.Local.fHour,4,v.Local.fHour)
+	f.Intrinsic.Control.EndIf
+	
+	'Determine Estimate
+	f.Intrinsic.Control.If(v.local.fGood,<>,0)
+	f.Intrinsic.Control.AndIf(v.DataTable.dtJobsDistinct(v.Local.i).Units_Open!fieldval,<>,0)
+		f.Intrinsic.Math.Div(v.Local.fGood,v.DataTable.dtJobsDistinct(v.Local.i).Units_Open!fieldval,v.Local.fEsKG)
+	f.Intrinsic.Control.Else
+		f.Intrinsic.String.Concat("Fatal Error, work order has 0 open units to process time against.  Will need to reprocess transaction.  Job is ", v.DataTable.dtJobsDistinct(v.Local.i).Job!fieldvaltrim,"-",v.DataTable.dtJobsDistinct(v.Local.i).Suffix!fieldvaltrim,v.Local.sMsgs)
+		f.Intrinsic.UI.Msgbox(v.Local.sMsgs)
+		f.Intrinsic.Control.CallSub(frmHeatTime_unload)
+	f.Intrinsic.Control.EndIf	
+	F.Intrinsic.Math.Div(V.Local.fWt,v.Local.fGood,v.Local.fEsKG)
+	'f.Intrinsic.Math.Mult(v.Local.fWt,v.Local.fEsKG,v.Local.fEsKG)
+		
+	'Determine whether to close the job
+	f.Intrinsic.Math.Add(v.Local.fGood,v.DataTable.dtJobsDistinct(v.Local.i).Units_Complete!fieldval,v.Local.fTtlP)
+	f.Intrinsic.Control.If(v.Local.fTtlP,>,v.DataTable.dtJobsDistinct(v.Local.i).Units_Open!fieldval)
+		v.Local.sClsd.Set("Y")
+	f.Intrinsic.Control.Else
+		v.Local.sClsd.Set("N")
+	f.Intrinsic.Control.EndIf
+	
+	'Insert record into DB
+	V.Local.ssql.Set("INSERT INTO GAB_5380_HEAT_RUN (JOB ,SUFFIX ,ROUTER ,DESCRIPTION ,PART ,PART_DESCRIPTION ,JOB_TOTAL_KG ,DATE_DUE ,IN_PROCESS ,COMPLETE_FLAG ,NOTES ,OPERATION ,RUNID ,WORKCENTRE ,WORKGROUP ,PIECES ,EST_KG ,JOB_TOTAL_PIECE ,EMP_NUM ,EMP_NAME, DATE_CREATED, Hours ,DATESTAMP) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}',{12},'{13}','{14}','{15}',{16},{17},'{18}','{19}','{20}','{21}','{22}')")
+	F.Intrinsic.String.Build(v.Local.ssql,V.Local.sJobH,V.Local.sSuff,v.Local.sRout,V.Local.sDesc.PSQLFriendly,v.Local.sPart,v.Local.sPDes.PSQLFriendly,v.Local.fWt,v.Local.dDDte.PervasiveDate,v.Local.sProc,v.Local.sClsd,v.Local.sNote.PSQLFriendly,v.Local.sOper,v.Local.lRun,v.Local.sWrkC,v.Local.sWrkG,V.Local.fGood,v.Local.fEsKG,v.DataTable.dtJobsDistinct(v.Local.i).Units_Open!fieldval,v.Local.sNumE,v.Local.sNmeE,V.Local.dDtTm.PervasiveDate,v.Local.fHour,V.Ambient.Now,v.Local.ssql)
+	f.ODBC.Connection!con.execute(v.Local.ssql)		
+	'Preformat some data then add to datatable
+	f.Intrinsic.Math.Mult(v.Local.fGood,10000,v.Local.fGood)
+	f.Intrinsic.Math.Mult(v.Local.fBadP,10000,v.Local.fBadP)
+	'f.Intrinsic.Math.Mult(v.Local.fHour,10000,v.Local.fHour)
+	
+	'Set appropriate employee code
+	f.Intrinsic.Control.If(v.Local.sWrkG.Trim,=,"HVF")
+		v.Local.sEmpl.Set("99993")
+	f.Intrinsic.Control.elseif(v.Local.sWrkG.Trim,=,"HTO")
+		v.Local.sEmpl.Set("99994")
+	F.Intrinsic.Control.ElseIf(v.Local.sWrkG.Trim,=,"HSQ")
+		v.Local.sEmpl.Set("99995")
+	f.Intrinsic.Control.ElseIf(v.Local.sWrkG.Trim,=,"HSH")
+		V.Local.sEmpl.Set("99996")
+	F.Intrinsic.Control.ElseIf(v.Local.sWrkG.Trim,=,"HNT")
+		v.Local.sEmpl.Set("99997")
+	F.Intrinsic.Control.ElseIf(v.Local.sWrkG.Trim,=,"HIH")
+		v.Local.sEmpl.Set("99998")
+	F.Intrinsic.Control.Else
+		v.Local.sEmpl.Set("99999")
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.Control.CallSub(TimeFormat,"Hours",v.Local.fHour)
+	f.Intrinsic.Variable.ArgToVar("BeginTime",v.Local.sSTme)
+	f.Intrinsic.Variable.ArgToVar("EndTime",v.Local.sETme)
+
+	f.Data.DataTable.AddRow("JB0455","Date",v.Local.sDate,"Employee",V.Local.sEmpl,"Job",v.Local.sJobH,"Suffix",v.Local.sSuff,"Seq",v.Local.sSequ,"WC",v.Local.sWrkC,"Closed",v.Local.sClsd,"Indirect","D","StartTime",v.Local.sSTme,"StopTime",v.Local.sETme,"RateType","R","GoodPcs",v.Local.fGood,"ScrapPcs",v.Local.fBadP)
+	
+	'f.Data.DataTable.AddRow("JB0455","Date",v.Local.sDate,"Employee",V.Local.sEmpl,"Job",v.Local.sJobH,"Suffix",v.Local.sSuff,"Seq",v.Local.sSequ,"WC",v.Local.sWrkC,"Hours",v.Local.fHour,"Closed",v.Local.sClsd,"Indirect","D","StartTime","0700","StopTime","2300","RateType","R","GoodPcs",v.Local.fGood,"ScrapPcs",v.Local.fBadP)
+	'V.Local.ssql.Set("INSERT INTO GAB_5380_HEAT_TREAT_RUNS VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}',{12},'{13}','{14}','{15}',{16},{17})")
+f.Intrinsic.Control.Next(v.Local.i)
+
+'Start of debug file
+V.Local.sStamp.Declare
+V.Local.sDebg.Declare
+f.Intrinsic.String.Format(v.Ambient.Now,"MMDDYYYY HHNNSS",V.Local.sStamp)
+f.Intrinsic.String.Concat(v.Caller.TempDir,"\HT_LAB_",v.Local.sStamp,v.Local.sDebg)
+f.Data.DataTable.SaveToCSV("JB0455",v.Local.sDebg,true)
+
+f.Intrinsic.Control.CallSub("JB0455Sync")
+
+f.Intrinsic.String.Concat(v.Caller.TempDir,"\HT_LABJOB_",v.Local.sStamp,v.Local.sDebg)
+f.Data.DataTable.SaveToCSV("dtJobs",v.Local.sDebg,true)
+
+gui.frmHeatTime.txtWGName.Text("")
+gui.frmHeatTime.lblWGCode.Caption("")
+gui.frmHeatTime.ddlWorkcentre.ClearItems
+gui.frmHeatTime.lblWCCode.Caption("")
+f.Data.DataTable.DeleteRow("dt")
+gui.frmHeatTime..Enabled(true)
+f.Intrinsic.Control.CallSub(frmHeatTime_unload)
+Program.Sub.ProcessLabour.End
+
+Program.Sub.TimeFormat.Start
+f.Intrinsic.Control.Try
+	v.Local.fInput.Declare
+	v.Local.sVals.Declare
+	v.Local.iHour.Declare
+	v.Local.iMinute.Declare
+	v.Local.fMinuteDec.Declare
+	v.Local.dBeginTime.Declare
+	v.Local.dEndTime.Declare
+	v.Local.sBeginTime.Declare
+	v.Local.sEndTime.Declare
+	v.Local.sStampHour.Declare
+	v.Local.sStampDay.Declare
+	v.Local.dBeginTime.Set(v.Ambient.Now)
+	
+	v.Local.fInput.Set(v.Args.Hours)
+	
+	'gET LEFT OF DECIMAL
+	f.Intrinsic.String.Split(v.Local.fInput,".",v.Local.sVals)
+	v.Local.iHour.Set(v.Local.sVals(0))
+	f.Intrinsic.String.Concat(".",v.Local.sVals(1),v.Local.fMinuteDec)
+	
+	f.Intrinsic.Date.DateAdd("H",v.Local.iHour,v.Local.dBeginTime,v.Local.dEndTime)
+	f.Intrinsic.Math.Mult(v.Local.fMinuteDec,60,v.Local.iMinute)
+	f.Intrinsic.Date.DateAdd("N",v.Local.iMinute,v.Local.dEndTime,v.Local.dEndTime)	
+	
+	f.Intrinsic.String.Format(v.Local.dBeginTime,"HHMM",v.Local.sBeginTime)
+	f.Intrinsic.String.Format(v.Local.dEndTime,"HHMM",v.Local.sEndTime)
+	
+	f.Intrinsic.Variable.AddRV("BeginTime",v.Local.sBeginTime)
+	f.Intrinsic.Variable.AddRV("EndTime",v.Local.sEndTime)
+	
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmHeatTime_unload)
+f.Intrinsic.Control.EndTry
+Program.Sub.TimeFormat.End
+
+Program.Sub.frmHeatTime_unload.Start
+f.ODBC.Connection!con.Close
+f.Intrinsic.Control.End
+Program.Sub.frmHeatTime_unload.End
+
+Program.Sub.ddlWorkcentre_LostFocus.Start
+v.Local.ssql.Declare
+v.Local.sWC.Declare
+f.Intrinsic.String.Build("SELECT MACHINE FROM V_WORKCENTERS WHERE WC_NAME='{0}'",V.Screen.frmHeatTime!ddlWorkcentre.Value,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sWC)
+gui.frmHeatTime.lblWCCode.Caption(v.Local.swc)
+Program.Sub.ddlWorkcentre_LostFocus.End
+
+
