@@ -1,0 +1,1170 @@
+Program.Sub.ScreenSU.Start
+Gui.frmQOC..Create
+Gui.frmQOC..Caption("Quick Order Creation")
+Gui.frmQOC..Size(12300,8265)
+Gui.frmQOC..MinX(0)
+Gui.frmQOC..MinY(0)
+Gui.frmQOC..Position(0,0)
+Gui.frmQOC..BackColor(-2147483633)
+Gui.frmQOC..MousePointer(0)
+Gui.frmQOC..Event(UnLoad,frmQOC_UnLoad)
+Gui.frmQOC.fraCustInfo.Create(Frame)
+Gui.frmQOC.fraCustInfo.Size(5505,3105)
+Gui.frmQOC.fraCustInfo.Position(120,75)
+Gui.frmQOC.fraCustInfo.Caption("Customer Order Info / Machine Shop Work Order")
+Gui.frmQOC.lblCustPO.Create(Label,"Customer PO#",True,1335,255,0,75,2835,True,0,"Arial",8,-2147483633,0)
+Gui.frmQOC.lblCustPO.Parent("fraCustInfo")
+Gui.frmQOC.lblCust.Create(Label,"",False,1650,255,0,3330,255,True,0,"Arial",8,-2147483633,0)
+Gui.frmQOC.lblCust.Parent("fraCustInfo")
+Gui.frmQOC.txtCustomerName.Create(TextBox,"",True,2700,300,0,75,240,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtCustomerName.Event(LostFocus,txtCustomerName_LostFocus)
+Gui.frmQOC.txtCustomerName.Event(KeyPress,txtCustomerName_KeyPress)
+Gui.frmQOC.txtCustomerName.Parent("fraCustInfo")
+Gui.frmQOC.cmdBrwCust.Create(Button)
+Gui.frmQOC.cmdBrwCust.Size(525,375)
+Gui.frmQOC.cmdBrwCust.Position(2805,195)
+Gui.frmQOC.cmdBrwCust.Caption("^")
+Gui.frmQOC.cmdBrwCust.Event(Click,cmdBrwCust_Click)
+Gui.frmQOC.cmdBrwCust.Parent("fraCustInfo")
+Gui.frmQOC.txtWO.Create(TextBox,"",True,1530,300,0,3360,225,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtWO.Parent("fraCustInfo")
+Gui.frmQOC.txtWO.Event(KeyPressEnter,txtWO_KeyPressEnter)
+Gui.frmQOC.cmdWOBrowse.Create(Button)
+Gui.frmQOC.cmdWOBrowse.Size(510,375)
+Gui.frmQOC.cmdWOBrowse.Position(4980,195)
+Gui.frmQOC.cmdWOBrowse.Caption("^")
+Gui.frmQOC.cmdWOBrowse.Parent("fraCustInfo")
+Gui.frmQOC.cmdWOBrowse.Event(Click,cmdWOBrowse_Click)
+Gui.frmQOC.cmdWOBrowse.Visible(False)
+Gui.frmQOC.txtCRMNotes.Create(TextboxM)
+Gui.frmQOC.txtCRMNotes.Enabled(False)
+Gui.frmQOC.txtCRMNotes.Size(5370,2070)
+Gui.frmQOC.txtCRMNotes.Position(75,600)
+Gui.frmQOC.txtCRMNotes.Parent("fraCustInfo")
+Gui.frmQOC.txtCustPO.Create(TextBox,"",True,1875,300,0,1470,2745,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtCustPO.Parent("fraCustInfo")
+Gui.frmQOC.txtCustPO.MaxLength(15)
+Gui.frmQOC.txtHeatQty.Create(TextBox,"",True,360,300,0,5040,225,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtHeatQty.Parent("fraCustInfo")
+Gui.frmQOC.fraPart.Create(Frame)
+Gui.frmQOC.fraPart.Size(5505,1380)
+Gui.frmQOC.fraPart.Position(105,3180)
+Gui.frmQOC.fraPart.Caption("Part Line Info")
+Gui.frmQOC.txtPart.Create(TextBox,"",True,1935,300,0,90,555,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtPart.Parent("fraPart")
+Gui.frmQOC.txtPart.Event(LostFocus,txtPart_LostFocus)
+Gui.frmQOC.cmdBrowseRtr.Create(Button)
+Gui.frmQOC.cmdBrowseRtr.Size(510,375)
+Gui.frmQOC.cmdBrowseRtr.Position(2040,525)
+Gui.frmQOC.cmdBrowseRtr.Caption("^")
+Gui.frmQOC.cmdBrowseRtr.Event(Click,cmdBrowseRtr_Click)
+Gui.frmQOC.cmdBrowseRtr.Parent("fraPart")
+Gui.frmQOC.txtKG.Create(TextBox,"",True,510,300,0,2550,555,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtKG.NumericOnly(1)
+Gui.frmQOC.txtKG.Parent("fraPart")
+Gui.frmQOC.txtPieceCount.Create(TextBox,"",True,480,300,0,3105,555,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtPieceCount.Parent("fraPart")
+Gui.frmQOC.txtDescription.Create(TextBox,"",True,1845,300,0,3630,555,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtDescription.Parent("fraPart")
+Gui.frmQOC.txtDescription.MaxLength(30)
+Gui.frmQOC.txtCM.Create(TextBox,"",False,720,300,0,3435,915,True,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtCM.Parent("fraPart")
+Gui.frmQOC.txtCM.NumericOnly(2)
+Gui.frmQOC.cmdAdd.Create(Button)
+Gui.frmQOC.cmdAdd.Size(1245,375)
+Gui.frmQOC.cmdAdd.Position(4215,885)
+Gui.frmQOC.cmdAdd.Parent("fraPart")
+Gui.frmQOC.cmdAdd.Caption("Add Line")
+Gui.frmQOC.cmdAdd.Event(Click,cmdAdd_Click)
+Gui.frmQOC.lblRouter.Create(Label,"Router #",True,1935,255,0,105,315,True,0,"Arial",8,-2147483633,0)
+Gui.frmQOC.lblRouter.Parent("fraPart")
+Gui.frmQOC.lblUM.Create(Label,"",True,465,255,0,2550,345,True,0,"Arial",8,-2147483633,0)
+Gui.frmQOC.lblUM.Parent("fraPart")
+Gui.frmQOC.lblDescription.Create(Label,"Description",True,1935,255,0,3645,360,True,0,"Arial",8,-2147483633,0)
+Gui.frmQOC.lblDescription.Parent("fraPart")
+Gui.frmQOC.lblRtrDesc.Create(Label,"",True,2310,255,0,120,1005,True,0,"Arial",8,-2147483633,0)
+Gui.frmQOC.lblRtrDesc.Parent("fraPart")
+Gui.frmQOC.lblPieceCount.Create(Label,"Pieces",True,600,255,0,3045,360,True,0,"Arial",8,-2147483633,0)
+Gui.frmQOC.lblPieceCount.Parent("fraPart")
+Gui.frmQOC.lblCM.Create(Label,"CM",False,360,255,0,3015,1020,True,0,"Arial",8,-2147483633,0)
+Gui.frmQOC.lblCM.DefaultValue("CM")
+Gui.frmQOC.lblCM.Parent("fraPart")
+Gui.frmQOC.gsgcLines.Create(GsGridControl)
+Gui.frmQOC.gsgcLines.Size(5505,2520)
+Gui.frmQOC.gsgcLines.Position(105,4635)
+Gui.frmQOC.cmdProcess.Create(Button)
+Gui.frmQOC.cmdProcess.Size(1635,375)
+Gui.frmQOC.cmdProcess.Position(105,7260)
+Gui.frmQOC.cmdProcess.Caption("Process")
+Gui.frmQOC.cmdProcess.Event(Click,cmdProcess_Click)
+Gui.frmQOC.cmdClear.Create(Button)
+Gui.frmQOC.cmdClear.Size(1485,375)
+Gui.frmQOC.cmdClear.Position(1890,7260)
+Gui.frmQOC.cmdClear.Caption("Clear All")
+Gui.frmQOC.cmdClear.Event(Click,cmdClear_Click)
+Gui.frmQOC.tabPics.Create(Tab)
+Gui.frmQOC.tabPics.Size(6330,7470)
+Gui.frmQOC.tabPics.Position(5670,165)
+Gui.frmQOC.tabPics.Event(Click,tabDocs_Click)
+Gui.frmQOC.tabPics.Tabs(2)
+Gui.frmQOC.tabPics.SetTab(0)
+Gui.frmQOC.tabPics.Caption("Customer PO (Per Order)")
+Gui.frmQOC.tabPics.SetTab(1)
+Gui.frmQOC.tabPics.Caption("Part Picture (Per Line)")
+Gui.frmQOC.htmlPart.Create(HtmlContainer)
+Gui.frmQOC.htmlPart.Size(6105,6540)
+Gui.frmQOC.htmlPart.Position(60,465)
+Gui.frmQOC.htmlPart.parent("tabPics",1)
+Gui.frmQOC.cmdRetakePart.Create(Button)
+Gui.frmQOC.cmdRetakePart.Size(1680,375)
+Gui.frmQOC.cmdRetakePart.Position(30,60)
+Gui.frmQOC.cmdRetakePart.Caption("Retake Part?")
+Gui.frmQOC.cmdRetakePart.Event(Click,cmdRetakePart_Click)
+Gui.frmQOC.cmdRetakePart.parent("tabPics",1)
+Gui.frmQOC.htmlDocs.Create(HtmlContainer)
+Gui.frmQOC.htmlDocs.Size(6105,6525)
+Gui.frmQOC.htmlDocs.Position(60,465)
+Gui.frmQOC.htmlDocs.Parent("tabPics",0)
+Gui.frmQOC.cmdRetakeDocs.Create(Button)
+Gui.frmQOC.cmdRetakeDocs.Size(1710,375)
+Gui.frmQOC.cmdRetakeDocs.Position(30,60)
+Gui.frmQOC.cmdRetakeDocs.Caption("Retake Document?")
+Gui.frmQOC.cmdRetakeDocs.Parent("tabPics",0)
+Gui.frmQOC.cmdRetakeDocs.Event(Click,cmdRetakeDocs_Click)
+Gui.frmQOC.cmdProcessMSHT.Create(Button)
+Gui.frmQOC.cmdProcessMSHT.Size(2625,375)
+Gui.frmQOC.cmdProcessMSHT.Position(3555,60)
+Gui.frmQOC.cmdProcessMSHT.Parent("tabPics",1)
+Gui.frmQOC.cmdProcessMSHT.Caption("Process Machine Shop HT Order")
+Gui.frmQOC.cmdProcessMSHT.Event(Click,cmdProcessMSHT_Click)
+Gui.frmQOC.cmdClearAllTab.Create(Button)
+Gui.frmQOC.cmdClearAllTab.Size(1185,375)
+Gui.frmQOC.cmdClearAllTab.Position(1740,60)
+Gui.frmQOC.cmdClearAllTab.Parent("tabPics",1)
+Gui.frmQOC.cmdClearAllTab.Caption("Clear All")
+Gui.frmQOC.cmdClearAllTab.Event(Click,cmdClearAllTab_Click)
+Gui.frmQOC.txtWatchFolder.Create(TextBox,"",False,1890,300,0,3720,7275,False,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtTempDir.Create(TextBox,"",False,1905,300,0,3630,7230,False,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtTempPImage.Create(TextBox,"",False,1860,300,0,3630,7305,False,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtTempOImage.Create(TextBox,"",False,1770,300,0,3570,7350,False,0,"Arial",8,-2147483643,1)
+Gui.frmQOC.txtCustNo.Create(TextBox,"",False,1695,300,0,3540,7290,False,0,"Arial",8,-2147483643,1)
+Gui.frmSolo..Create
+Gui.frmSolo..Caption("Solo Picture")
+Gui.frmSolo..Size(8055,7860)
+Gui.frmSolo..MinX(0)
+Gui.frmSolo..MinY(0)
+Gui.frmSolo..Position(0,0)
+Gui.frmSolo..BackColor(-2147483633)
+Gui.frmSolo..MousePointer(0)
+Gui.frmSolo.picItem.Create(PictureBox)
+Gui.frmSolo.picItem.Size(7500,6675)
+Gui.frmSolo.picItem.Position(195,120)
+Gui.frmSolo.cmdProcess.Create(Button)
+Gui.frmSolo.cmdProcess.Size(1740,375)
+Gui.frmSolo.cmdProcess.Position(150,6855)
+Gui.frmSolo.cmdProcess.Caption("Process")
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+v.Global.bPart.Declare
+v.Global.bDocs.Declare
+V.Global.lStartNumber.Declare
+v.Global.sConfigFile.Declare
+f.Intrinsic.String.Concat(v.Caller.GasDir,"\",v.Caller.CompanyCode,"_GAB_5380_HT_CONFIG.xml",v.global.sConfigFile)
+Program.External.Include.Library("6004.lib")
+Program.External.Include.Library("200801.lib")
+Program.External.Include.Library("GAB_5380_LIBRARY.lib")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.ODBC.Connection!con.OpenCompanyConnection(60)
+f.Intrinsic.Control.CallSub(loadConfig)
+gui.frmQOC.tabPics.anchor(15)
+gui.frmQOC.htmlPart.anchor(15)
+gui.frmQOC.htmlDocs.anchor(15)
+gui.frmQOC.gsgcLines.anchor(7)
+gui.frmQOC.cmdProcess.anchor(6)
+gui.frmQOC.cmdClear.anchor(6)
+gui.frmQOC.tabPics.SetTab(0)
+gui.frmQOC..Show
+gui.frmQOC.txtCustomerName.SetFocus(true)
+f.Intrinsic.Control.CallSub(deleteWatchFiles)
+f.Intrinsic.Control.CallSub(listenForDocs)
+Program.Sub.Main.End
+
+Program.Sub.tabDocs_Click.Start
+f.Intrinsic.Control.If(v.Screen.frmQOC!tabPics.Tab,=,0)
+	v.Global.bDocs.Set(False)
+	f.Intrinsic.Control.CallSub(listenforDocs)
+f.Intrinsic.Control.elseif(v.Screen.frmQOC!tabPics.Tab,=,1)
+	v.Global.bDocs.Set(True)
+	f.Intrinsic.Control.CallSub(listenforPart)
+f.Intrinsic.Control.EndIf
+Program.Sub.tabDocs_Click.End
+
+Program.Sub.loadConfig.Start
+'Declare variables
+v.Local.sWatchFolder.Declare(string)
+v.Local.sTempDFolder.Declare(string)
+v.Local.sRouters.Declare(string)
+V.Local.sUpp.Declare(string)
+v.Local.i.Declare(long)
+
+'Determine if Config datatable exists, if so, close it
+f.Intrinsic.Control.If(v.DataTable.dtConfig.Exists)
+	f.Data.DataTable.Close("dtConfig")
+f.Intrinsic.Control.EndIf
+
+'Create datatable from config file
+f.Data.DataTable.CreateFromXML("dtConfig",v.global.sConfigFile,true)
+
+'Set hot typeahead
+f.Intrinsic.UI.SetBrowserHotTypeAhead(true)
+
+'Set Watch Directories
+gui.frmQOC.txtWatchFolder.Text(v.DataTable.dtConfig(0).WatchFolder!fieldvaltrim)
+gui.frmQOC.txtTempDir.Text(v.DataTable.dtConfig(0).TempMoveFolder!fieldvaltrim)
+
+'Set Starting number
+v.Global.lStartNumber.Set(v.DataTable.dtConfig(0).StartNumber!fieldval)
+
+'AutoComplete
+F.Data.DataTable.CreateFromSQL("dtCust","con","Select Customer, Name_Customer, ucase(Name_Customer) as 'UpperNameCustomer' From V_CUSTOMER_MASTER",TRUE)
+F.Intrinsic.Control.For(V.Local.i,0,v.DataTable.dtCust.RowCount--,1)
+	gui.frmQOC.txtCustomerName.addautocompleteitem(v.DataTable.dtCust(v.Local.i).NAME_CUSTOMER!FIELDVALTRIM)
+f.Intrinsic.Control.Next(v.Local.i)
+
+'AutoComplete for router
+F.Data.DataTable.CreateFromSQL("dtRTRL","con","Select Ucase(Router) as 'Router' From V_ROUTER_HEADER",TRUE)
+F.Intrinsic.Control.For(V.Local.i,0,v.DataTable.dtRTRL.RowCount--,1)
+	gui.frmQOC.txtPart.addautocompleteitem(v.DataTable.dtRTRL(v.Local.i).ROUTER!FIELDVALTRIM)
+f.Intrinsic.Control.Next(v.Local.i)
+
+'Grab all routings
+f.Data.DataTable.CreateFromSQL("dtRtrs","con","SELECT ROUTER FROM V_ROUTER_HEADER")
+f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtRtrs.RowCount--,1)
+	''gui.frmQOC.cboPart.AddItem(v.DataTable.dtRtrs(v.Local.i).ROUTER!FIELDVALTRIM,v.local.i)
+	'f.Intrinsic.String.Concat(v.Local.sRouters,v.DataTable.dtRtrs(v.Local.i).ROUTER!FIELDVALTRIM,"*!*",v.Local.sRouters)
+f.Intrinsic.Control.Next(v.Local.i)
+
+'Datatable set
+f.Data.DataTable.Create("dtLines",true)
+f.Data.DataTable.AddColumn("dtLines","Part","string")
+f.Data.DataTable.AddColumn("dtLines","Qty","float")
+f.Data.DataTable.AddColumn("dtLines","UoM","string")
+f.Data.DataTable.AddColumn("dtLines","CM","integer",0)
+f.Data.DataTable.AddColumn("dtLines","PieceCount","Integer")
+f.Data.DataTable.AddColumn("dtLines","Description","string")
+f.Data.DataTable.AddColumn("dtLines","ExtraDesc","string")
+f.Data.DataTable.AddColumn("dtLines","Picture","string")
+f.Data.DataTable.AddColumn("dtLines","Customer","string")
+f.Data.DataTable.AddColumn("dtLines","GSSPart","string")
+
+'Set standard format
+gui.frmQOC.gsgcLines.DataSource("dtLines")
+gui.frmQOC.gsgcLines.AddGridviewFromDatatable("gvLines","dtLines")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Part","ReadOnly","True")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Part","Allowedit","False")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Qty","Caption","Qty")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Qty","Allowedit","True")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Qty","ReadOnly","False")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","UoM","ReadOnly","True")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","UoM","Allowedit","False")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Description","Allowedit","True")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Description","ReadOnly","False")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Picture","Visible","False")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","Customer","Visible","False")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","ExtraDesc","Visible","False")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","GSSPart","Visible","False")
+gui.frmQOC.gsgcLines.SetColumnProperty("gvLines","PieceCount","Caption","Pieces")
+gui.frmQOC.gsgcLines.columnedit("gvLines","Part","ComboBox",v.Local.sRouters)
+Program.Sub.loadConfig.End
+
+Program.Sub.loadcustomer.Start
+f.Intrinsic.Control.Try
+	v.Local.sSql.Declare
+	v.Local.sNme.Declare
+	v.Local.sRet.Declare
+	v.Local.sNte.Declare
+	v.Local.sTmp.Declare
+	v.Local.sCst.Declare
+	v.Local.i.Declare
+	
+	'Get Customer ID
+	v.Local.sNme.Set(v.Screen.frmQOC!txtCustomerName.text)
+	f.Intrinsic.Control.If(v.Local.sNme.Trim,<>,"")
+		f.Intrinsic.String.Replace(v.Local.sNme,"'","''",v.Local.sNme)
+		f.Intrinsic.String.Build("UpperNameCustomer='{0}'",v.Local.sNme.UCase,v.Local.sSql)
+		f.Data.DataTable.Select("dtCust",v.Local.sSql,v.Local.sRet)		
+		f.Intrinsic.Control.If(v.Local.sRet.Trim,=,"***NORETURN***")
+			v.Local.sCst.Set("")
+			gui.frmQOC.lblCust.Caption("No Customer Found")
+			gui.frmQOC.lblCust.ForeColor(v.Color.Red)
+		f.Intrinsic.Control.Else
+			v.Local.sCst.Set(v.DataTable.dtCust(v.Local.sRet).CUSTOMER!FIELDVALTRIM)
+			gui.frmQOC.lblCust.caption(v.Local.sCst)
+			gui.frmQOC.lblCust.ForeColor(v.Color.Black)
+		f.Intrinsic.Control.EndIf
+		
+		'Get Notes on the customer
+		f.Intrinsic.Control.If(v.DataTable.dtNotes.Exists)
+			f.Data.DataTable.Close("dtNotes")
+		f.Intrinsic.Control.EndIf
+		f.Intrinsic.String.Build("select START_DATETIME, CONCAT(RTRIM(TITLE),CONCAT(' || ',DESCRIPTION)) AS 'Notes' from CRM_EVENTS WHERE COMPID='{0}' ORDER BY START_DATETIME DESC",v.Local.sCst.Trim,v.Local.ssql)
+		f.Data.DataTable.CreateFromSQL("dtNotes","con",v.Local.sSql)
+		f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtNotes.RowCount--,1)
+			f.Intrinsic.String.Split(v.DataTable.dtNotes(v.Local.i).START_DATETIME!fieldval,".",v.Local.sTmp)
+			f.Intrinsic.String.Concat(v.Local.sNte,v.Local.stmp," || ",v.DataTable.dtNotes(v.Local.i).Notes!fieldvaltrim,v.Ambient.NewLine,v.Ambient.NewLine,v.Local.sNte)
+		f.Intrinsic.Control.Next(v.Local.i)
+		''Supress showing the notes due too much information.  24 June 2021, RF
+		''gui.frmQOC.txtCRMNotes.Text(v.Local.sNte)
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.ODBC.Connection!con.Close
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.EndTry
+Program.Sub.loadcustomer.End
+
+Program.Sub.listenforPart.Start
+f.Intrinsic.Control.Try
+	v.Local.sWatch.Declare
+	v.Local.sList.Declare
+	v.Local.sTempD.Declare
+	v.Local.sFileF.Declare
+	v.Local.sFileD.Declare
+	v.Local.sTimeS.Declare
+	v.Local.lConfm.Declare
+	v.Local.sExist.Declare
+	v.Local.i.Declare
+	
+	v.Local.sExist.Set(v.Screen.frmQOC!txtTempPImage.text)
+	f.Intrinsic.Control.If(v.Local.sExist.Trim,<>,"")
+		v.Global.bPart.Set(true)
+	f.Intrinsic.Control.EndIf
+	v.Local.sWatch.Set(v.Screen.frmQOC!txtWatchFolder.text)
+	v.Local.sTempD.Set(v.Screen.frmQOC!txtTempDir.text)
+	f.Intrinsic.String.Concat(v.Local.sWatch,"\",v.Local.sWatch)
+	f.Intrinsic.String.Concat(v.Local.sTempD,"\",v.Local.sTempD)
+	f.Intrinsic.Control.DoUntil(v.global.bPart)
+		f.Intrinsic.File.GetFileList(v.Local.swatch,v.Local.sList)
+		f.Intrinsic.Control.If(v.Local.sList.Trim,<>,"")
+			f.Intrinsic.string.split(v.Local.sList,":",v.Local.sList)
+			f.Intrinsic.Control.If(v.Local.sList.UBound,>,0)
+				f.Intrinsic.Control.CallSub(deleteWatchFiles)
+				v.global.bPart.Set(False)
+			f.Intrinsic.Control.Else
+				f.Intrinsic.UI.SleepMS(1000)
+				f.Intrinsic.String.Format(v.Ambient.Now,"YYYYMMDD HHNNSS",v.Local.sTimeS)
+				f.Intrinsic.String.Concat(v.Local.sWatch,v.Local.sList,v.Local.sFileF)
+				f.Intrinsic.String.Concat(v.Local.sTempD,"P",v.Local.sTimeS,".jpg",v.Local.sFileD)
+				f.Intrinsic.File.CopyFile(v.Local.sFileF,v.Local.sFileD)
+				gui.frmQOC.txtTempPImage.Text(v.Local.sFileD)
+				f.Intrinsic.File.DeleteFile(v.Local.sFileF)
+				gui.frmQOC.htmlPart.Navigate(v.Local.sFileD)
+			f.Intrinsic.Control.EndIf
+			v.global.bPart.Set(true)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.Loop
+f.Intrinsic.Control.Catch
+	'f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	'f.Intrinsic.Control.CallSub(frmQOC_Unload)
+f.Intrinsic.Control.EndTry
+Program.Sub.listenforPart.End
+
+Program.Sub.deleteWatchFiles.Start
+v.Local.sWatch.Declare
+v.Local.sFileF.Declare
+v.Local.sList.Declare
+v.Local.i.Declare
+
+v.Local.sWatch.Set(v.Screen.frmQOC!txtWatchFolder.text)
+f.Intrinsic.String.Concat(v.Local.sWatch,"\",v.Local.sWatch)
+f.Intrinsic.File.GetFileList(v.Local.swatch,v.Local.sList)
+f.Intrinsic.string.split(v.Local.sList,":",v.Local.sList)
+f.Intrinsic.Control.For(v.Local.i,0,v.Local.sList.UBound,1)
+	f.Intrinsic.Control.If(v.Local.sList(v.Local.i).trim,<>,"")
+		f.Intrinsic.String.Concat(v.Local.sWatch,v.Local.sList(v.Local.i),v.Local.sFileF)
+		f.Intrinsic.File.DeleteFile(v.Local.sFileF)
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Next(v.Local.i)
+Program.Sub.deleteWatchFiles.End
+
+Program.Sub.listenforDocs.Start
+f.Intrinsic.Control.Try
+	v.Local.sWatch.Declare
+	v.Local.sList.Declare
+	v.Local.sTempD.Declare
+	v.Local.sFileF.Declare
+	v.Local.sFileD.Declare
+	v.Local.sTimeS.Declare
+	v.Local.lConfm.Declare
+	v.Local.sExist.Declare
+	v.Local.i.Declare
+	
+	v.Local.sWatch.Set(v.Screen.frmQOC!txtWatchFolder.text)
+	v.Local.sTempD.Set(v.Screen.frmQOC!txtTempDir.text)
+	v.Local.sExist.Set(v.Screen.frmQOC!txtTempOImage.text)
+	f.Intrinsic.Control.If(v.Local.sExist.Trim,<>,"")
+		v.Global.bDocs.Set(true)
+	f.Intrinsic.Control.EndIf
+	f.Intrinsic.String.Concat(v.Local.sWatch,"\",v.Local.sWatch)
+	f.Intrinsic.String.Concat(v.Local.sTempD,"\",v.Local.sTempD)
+	f.Intrinsic.Control.DoUntil(v.global.bDocs)
+		f.Intrinsic.File.GetFileList(v.Local.swatch,v.Local.sList)
+		f.Intrinsic.Control.If(v.Local.sList.Trim,<>,"")
+			f.Intrinsic.string.split(v.Local.sList,":",v.Local.sList)
+			f.Intrinsic.Control.If(v.Local.sList.UBound,>,0)
+				f.Intrinsic.Control.CallSub(deleteWatchFiles)
+				v.global.bDocs.Set(False)
+			f.Intrinsic.Control.Else
+				'Updated 4th February 2020 RDF
+				f.Intrinsic.UI.SleepMS(1500)
+				'f.Intrinsic.UI.SleepMS(1000)
+				f.Intrinsic.String.Format(v.Ambient.Now,"YYYYMMDD HHNNSS",v.Local.sTimeS)
+				f.Intrinsic.String.Concat(v.Local.sWatch,v.Local.sList,v.Local.sFileF)
+				f.Intrinsic.String.Concat(v.Local.sTempD,"O",v.Local.sTimeS,".jpg",v.Local.sFileD)
+				f.Intrinsic.File.CopyFile(v.Local.sFileF,v.Local.sFileD)
+				gui.frmQOC.txtTempOImage.Text(v.Local.sFileD)
+				f.Intrinsic.File.DeleteFile(v.Local.sFileF)
+				gui.frmQOC.htmlDocs.Navigate(v.Local.sFileD)
+			f.Intrinsic.Control.EndIf
+			v.global.bDocs.Set(true)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.Loop
+f.Intrinsic.Control.Catch
+	'f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	'f.Intrinsic.Control.CallSub(frmQOC_Unload)
+f.Intrinsic.Control.EndTry
+Program.Sub.listenforDocs.End
+
+Program.Sub.cmdRetakeDocs_Click.Start
+f.Intrinsic.Control.Try
+	v.Local.lConf.Declare
+	v.Local.sFile.Declare
+	
+	v.Local.sFile.Set(v.Screen.frmQOC!txtTempOImage.text)
+	f.Intrinsic.Control.If(v.Local.sFile.Trim,<>,"")
+		f.Intrinsic.UI.MsgBox("Are you sure you want retake the document picture?","Retake Documents Picture",4,v.Local.lConf)			
+		f.Intrinsic.Control.If(v.Local.lConf,=,6)
+			f.Intrinsic.File.DeleteFile(v.Local.sFile)
+			v.Global.bDocs.Set(False)
+			gui.frmQOC.txtTempOImage.Text("")
+			gui.frmQOC.tabPics.SetTab(0)
+			gui.frmQOC.htmlDocs.Navigate("")
+			f.Intrinsic.Control.CallSub(listenForDocs)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.else
+		f.Intrinsic.UI.Msgbox("No picture taken.")
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmQOC_Unload)
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdRetakeDocs_Click.End
+
+Program.Sub.cmdBrwCust_Click.Start
+V.Local.sRet.Declare(String)
+V.Local.sTitles.Declare(String)
+V.Local.iWidths.Declare(String)
+V.Local.ssql.Declare(String)
+
+F.intrinsic.string.split("Customer No*!*Name Customer*!*City","*!*",V.local.sTitles)
+F.intrinsic.string.split("2000*!*3000*!*2000","*!*",V.local.iWidths)
+
+V.Local.ssql.set("select CUSTOMER, NAME_CUSTOMER, CITY from V_CUSTOMER_MASTER ORDER BY CUSTOMER")
+
+F.intrinsic.ui.browser("Select a Customer",con,v.Local.ssql,V.local.sTitles,V.local.iWidths,V.local.sRet)
+
+F.intrinsic.control.if(V.local.sRet,"=","***CANCEL***")
+F.intrinsic.control.else
+	F.intrinsic.string.split(V.local.sRet,"*!*",V.local.sRet)
+	gui.frmQOC.txtCustomerName.Text(v.Local.sRet(1).trim)
+	f.Intrinsic.Control.CallSub(loadCustomer)
+F.Intrinsic.Control.endif
+Program.Sub.cmdBrwCust_Click.End
+
+Program.Sub.cmdProcess_Click.Start
+F.Intrinsic.Control.Try
+	'Moved from Create DC	
+	f.Intrinsic.Math.Add(v.Global.lStartNumber,1,v.Global.lStartNumber)
+	f.Data.DataTable.SetValue("dtConfig",0,"StartNumber",v.Global.lStartNumber)
+	f.Data.DataTable.SaveToXML("dtConfig",0,true,v.Global.sConfigFile)
+
+	f.Intrinsic.Control.If(v.DataTable.dtLines.RowCount,<>,0)
+		gui.frmQOC..Enabled(False)
+		F.Intrinsic.UI.InvokeWaitDialog("Processing - Creating Documentation Link")
+		F.Intrinsic.Control.CallSub(createDC,"WONum","")
+		gui.frmQOC..Enabled(True)
+		f.Intrinsic.UI.CloseWaitDialog
+		f.Intrinsic.Control.CallSub(clearAll)
+	f.Intrinsic.Control.Else
+		f.Intrinsic.UI.Msgbox("No Lines added to Order.")
+	f.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmQOC_Unload)
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdProcess_Click.End
+
+Program.Sub.cmdProcessMSHT_Click.Start
+F.Intrinsic.Control.Try
+	v.Local.sMyCustPO.Declare
+	v.Local.sMyImage.Declare
+	v.Local.sWONum.Declare
+	v.Local.sParam.Declare
+	v.Local.iRefID.Declare
+	v.Local.sFile.Declare
+	v.Local.sOrdr.Declare
+	v.Local.sSpt.Declare
+	v.Local.sWOH.Declare
+	v.Local.sWOS.Declare
+	v.Local.sSEQ.Declare
+	v.Local.sSql.Declare
+	v.Local.sPrm.Declare
+	v.Local.sVal.Declare
+	v.Local.sPart.Declare
+	
+	f.Intrinsic.Control.CallSub(semiDisable,"Switch","True")
+	
+	'Set the images
+	v.Local.sMyImage.Set(v.Screen.frmQOC!txtTempPImage.text)
+	v.Local.sMyCustPO.Set(v.Screen.frmQOC!txtTempOImage.text)
+	
+	'Check if exists
+	F.Intrinsic.Control.If(V.Local.sMyImage.Trim,=,"")
+		f.Intrinsic.UI.Msgbox("Machine shop picture missing.")
+		f.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+	
+	'Start Process
+	gui.frmQOC..Enabled(False)
+	F.Intrinsic.UI.InvokeWaitDialog("Processing - Creating Documentation Link")
+	
+	'Set WO values
+	f.Intrinsic.String.Split(v.Screen.frmQOC!txtWO.text,"-",v.Local.sSpt)
+	v.Local.sWOH.Set(v.Local.sSpt(0))
+	v.Local.sWOS.Set(v.Local.sSpt(1))
+	v.Local.sSEQ.Set(v.Local.sSpt(2))
+	f.Intrinsic.String.Concat(v.Local.sWOH,v.Local.sWOS,v.Local.sWONum)
+	
+	'Add the WO Line
+	f.Intrinsic.Control.CallSub(addWrkLn,"WOH",v.Local.sWOH,"WOS",v.Local.sWOS)
+	
+	'Add the generic PO
+	gui.frmQOC.txtTempOImage.Text(v.DataTable.dtConfig(0).MSDoc!fieldvaltrim)
+	
+	'Add descriptor
+	f.Intrinsic.String.Concat("Start at Sequence: ",v.Local.sSEQ,v.Local.sPart)
+	
+	'Determine if the documentation exists yet and if not, create the documentation
+	f.Global.DocumentControl.GetLinkID(v.Local.sWONum.Trim,20,v.Local.iRefID)
+	f.Intrinsic.Control.If(v.Local.irefid,=,-1)
+		F.Intrinsic.Control.CallSub(createDC,"WONum",v.Local.sWONum)
+	f.Intrinsic.Control.EndIf
+	
+	'SET OPERATION CODE TO PROCESSED
+	f.Intrinsic.String.Build("UPDATE JOB_OPERATIONS SET CODE_SORT_OPER='PROCESSED' WHERE JOB='{0}' AND SUFFIX='{1}' AND SEQ='{2}'",v.Local.sWOH,v.Local.sWOS,v.Local.sSEQ,v.Local.sSql)
+	f.ODBC.Connection!con.execute(v.Local.ssql)
+	
+	'Print heat treatment paperwork
+	f.Intrinsic.String.ConcatCallWrapperArgs(v.Local.sWOH,v.Local.sWOS,"1811",v.Local.sPrm)
+	f.Global.General.CallWrapperSyncBio(900100,v.Local.sPrm)
+	f.Intrinsic.String.Split("Terminal*!*MATLBAR*!*OUTBAR*!*FGBAR*!*PROGRAM*!*REPORTID*!*LOGO*!*MYIMAGE*!*MYCUSTPO*!*MYPART","*!*",v.Local.sPrm)
+	f.Intrinsic.String.concat(v.Caller.Terminal,"*!* *!* *!* *!*HEAT*!*001811*!* *!*",v.Local.sMyImage,"*!*",v.Local.sMyCustPO,"*!*",v.Local.sPart,v.Local.sVal)
+	f.Intrinsic.String.Split(v.Local.sVal,"*!*",v.Local.sval)
+	f.Global.BI.PrintReport(100004,0,v.Local.sPrm,v.Local.sVal,"",true)
+	
+	f.Intrinsic.Control.CallSub(semiDisable,"Switch","True")
+	gui.frmQOC..Enabled(True)
+	f.Intrinsic.UI.CloseWaitDialog
+	f.Intrinsic.Control.CallSub(clearAll)
+F.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmQOC_Unload)
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdProcessMSHT_Click.End
+
+Program.Sub.addWrkLn.Start
+f.Intrinsic.Control.Try
+	v.Local.sPart.Declare
+	v.Local.sDesc.Declare
+	v.Local.sQnty.Declare
+	v.Local.sPict.Declare
+	v.Local.sUnit.Declare
+	v.Local.iPiec.Declare
+	v.Local.ssql.Declare
+	v.Local.sret.Declare
+	
+	'Set Picture value
+	v.Local.sPict.Set(v.Screen.frmQOC!txtTempPImage.text)
+	
+	'Grab Part, Description, Piece Count
+	f.Intrinsic.String.Build("SELECT PART, DESCRIPTION, QTY_ORDER FROM V_JOB_HEADER WHERE JOB='{0}' AND SUFFIX='{1}'",v.args.WOH,v.args.WOS,v.Local.ssql)
+	f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sret)
+	f.Intrinsic.String.Split(v.Local.sret,"*!*",v.Local.sret)
+	v.Local.sPart.Set(v.Local.sret(0))
+	v.Local.sDesc.Set(v.Local.sret(1))
+	v.Local.iPiec.Set(v.Local.sret(2))
+	
+	'Grab Weight, Unit of measure
+	f.Intrinsic.String.Build("SELECT LBS, UM_INVENTORY FROM V_INVENTORY_ALL WHERE PART='{0}'",v.Local.sPart,v.Local.ssql)
+	f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sret)
+	f.Intrinsic.String.Split(v.Local.sret,"*!*",v.Local.sret)
+	v.Local.sQnty.Set(v.Local.sret(0))
+	v.Local.sUnit.Set(v.Local.sret(1))
+	
+	'Add the line to the table
+	f.Data.DataTable.AddRow("dtLines","Part",v.Local.sPart,"Description",v.Local.sDesc,"QTY",v.Local.sQnty,"Picture",v.Local.sPict,"UoM",v.Local.sQnty,"PieceCount",v.Local.iPiec)
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmQOC_Unload)
+f.Intrinsic.Control.EndTry
+Program.Sub.addWrkLn.End
+
+Program.Sub.createDC.Start
+f.Intrinsic.Control.Try
+'P is Part, O is order
+'txtTempPImage
+'txtTempOImage
+v.Local.sNewDir.Declare
+v.Local.sStdDir.Declare
+v.Local.sTmpDir.Declare
+v.Local.sTmpOFi.Declare
+v.Local.sTmpPFi.Declare
+v.Local.sNewOFi.Declare
+v.Local.sNewPFi.Declare
+v.Local.bStdDir.Declare
+v.Local.bNewDir.Declare
+v.Local.iLink.Declare
+v.Local.iRefi.Declare
+v.Local.iPosi.Declare
+v.Local.sFile.Declare
+v.Local.sOrdr.Declare
+v.Local.sLink.Declare
+v.Local.sWOLn.Declare
+v.Local.iFiEx.Declare
+v.Local.sFFPt.Declare
+v.Local.sMyOF.Declare
+v.Local.sMyPF.Declare
+v.Local.sTmpF.Declare
+v.Local.sFTyp.Declare
+v.Local.sSufx.Declare
+v.Local.sONo.Declare
+v.Local.sSql.Declare
+V.Local.iPls.Declare
+v.Local.i.Declare
+v.Local.iCM.Declare
+V.Local.iPlusOne.Declare
+
+V.Local.sVal.Declare
+V.Local.sPrm.Declare
+v.Local.sMyImage.Declare
+v.Local.sMyCustPO.Declare
+V.Local.sPart.Declare
+
+v.Local.fQty.Declare
+v.Local.sUom.Declare
+v.Local.fPCC.Declare
+v.Local.sDes.Declare
+v.Local.sEDs.Declare
+v.Local.sPic.Declare
+v.Local.sCus.Declare
+v.Local.sGSS.Declare
+v.Local.sRtr.Declare
+v.Local.sCPO.Declare
+V.Local.sPOP.Declare
+v.Local.sSuf.Declare
+
+v.Local.sReplace.Declare
+
+v.Local.sXFile.Declare
+v.Local.sDir.Declare
+v.Local.bDir.Declare
+f.Intrinsic.String.Concat(v.Caller.FilesDir,"\",v.Caller.CompanyCode,"_XML",V.Local.sDir)
+F.Intrinsic.File.DirExists(V.Local.sDir,v.Local.bDir)
+f.Intrinsic.Control.If(v.Local.bDir,=,False)
+	f.Intrinsic.File.CreateDir(v.Local.sDir)
+f.Intrinsic.Control.EndIf
+	
+'Set the temporary directory & file paths
+v.Local.sTmpDir.Set(v.Screen.frmQOC!txtTempDir.text)
+V.Local.sTmpOFi.Set(V.Screen.frmQOC!txtTempOImage.TEXT)
+f.Intrinsic.String.LPad(v.Global.lStartNumber,"0",7,v.Local.sONo)
+
+'Create the standard directory if it does not exist
+f.Intrinsic.String.Concat(v.Caller.PluginsDir,"\WODocs\",v.Local.sStdDir)
+f.Intrinsic.File.DirExists(v.Local.sStdDir,v.Local.bStdDir)
+f.Intrinsic.Control.If(v.Local.bStdDir,=,False)
+	f.Intrinsic.File.CreateDir(v.Local.sStdDir)
+f.Intrinsic.Control.EndIf
+
+'Grab the number from the file
+V.Local.sOrdr.Set(v.Local.sONo)
+
+'Create the new folder within the directory
+f.Intrinsic.Control.If(v.Args.WONum.Trim,=,"")
+	f.Intrinsic.String.Concat(v.Local.sStdDir,v.Local.sOrdr,v.Local.sNewDir)
+	f.Intrinsic.File.DirExists(v.Local.sNewDir,v.Local.bNewDir)
+	f.Intrinsic.Control.If(v.Local.bNewDir,=,False)
+		f.Intrinsic.File.CreateDir(v.Local.sNewDir)
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Else
+	f.Intrinsic.String.Concat(v.Local.sStdDir,v.Args.WONum,v.Local.sNewDir)
+	f.Intrinsic.File.DirExists(v.Local.sNewDir,v.Local.bNewDir)
+	f.Intrinsic.Control.If(v.Local.bNewDir,=,False)
+		f.Intrinsic.File.CreateDir(v.Local.sNewDir)
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.EndIf
+
+'Set file name for customer PO
+F.Intrinsic.String.InstrRev(v.Screen.frmQOC!txtTempOImage.text,"\",V.Local.iPosi)
+F.Intrinsic.String.Mid(v.Screen.frmQOC!txtTempOImage.text,V.Local.iPosi,v.Local.sMyOF)
+		
+'Copy the files from the temporary directory to the new one
+f.Intrinsic.string.Concat(v.Local.sNewDir,v.Local.sMyOF,v.Local.sNewOFi)
+f.Intrinsic.file.CopyFile(v.Local.sTmpOFi,v.Local.sNewOFi)
+
+'Set the PO
+v.Local.sCPO.Set(v.Screen.frmQOC!txtCustPO.text)
+v.Local.sPOP.Set(v.Screen.frmQOC!txtTempOImage.text)
+
+f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtLines.RowCount--,1)
+	f.Intrinsic.Control.If(v.DataTable.dtLines(v.Local.i).PART!FIELDVALTRIM,<>,"")
+		v.Local.sRtr.Set(v.DataTable.dtLines(v.Local.i).PART!FIELDVALTRIM)
+		v.Local.fQty.Set(v.DataTable.dtLines(v.Local.i).QTY!FIELDVAL)
+		v.Local.sUom.Set(v.DataTable.dtLines(v.Local.i).UOM!FIELDVAL)
+		v.Local.fPCC.Set(v.DataTable.dtLines(v.Local.i).PIECECOUNT!FIELDVAL)
+		v.Local.sDes.Set(v.DataTable.dtLines(v.Local.i).DESCRIPTION!FIELDVALTRIM)
+		v.Local.sEDs.Set(v.DataTable.dtLines(v.Local.i).ExtraDesc!fieldvaltrim)
+		v.Local.sPic.Set(v.DataTable.dtLines(v.Local.i).Picture!fieldvaltrim)
+		v.Local.sCus.Set(v.DataTable.dtLines(v.Local.i).CUSTOMER!FIELDVALTRIM)
+		v.Local.iCM.Set(v.DataTable.dtLines(v.Local.i).CM!FIELDVAL)
+		
+		'Create SO Suffix
+		f.Intrinsic.Math.Add(v.Local.i,1,v.Local.iPlusOne)
+		f.Intrinsic.String.LPad(v.Local.iPlusOne,0,3,v.Local.sSuf)
+		f.Intrinsic.String.Concat("H",v.Global.lStartNumber,"-",v.Local.iPlusOne,v.Local.sPart)
+		f.Data.DataTable.SetValue("dtLines",v.Local.i,"GSSPart",v.Local.sPart)
+		
+		'Set temp picture file 
+		V.Local.sTmpPFi.Set(v.DataTable.dtLines(v.Local.i).Picture!fieldvaltrim)
+		
+		'Set File names
+		F.Intrinsic.String.InstrRev(v.DataTable.dtLines(v.Local.i).Picture!fieldvaltrim,"\",V.Local.iPosi)
+		F.Intrinsic.String.Mid(v.DataTable.dtLines(v.Local.i).Picture!fieldvaltrim,V.Local.iPosi,v.Local.sMyPF)
+
+		'Copy the parts
+		f.Intrinsic.string.Concat(v.Local.sNewDir,v.Local.sMyPF,v.Local.sNewPFi)
+		f.Intrinsic.file.CopyFile(v.Local.sTmpPFi,v.Local.sNewPFi)
+
+		'Concat the WO
+		f.Intrinsic.Control.If(v.Args.WONum.Trim,=,"")
+			f.Intrinsic.String.Right(v.Local.sOrdr,6,v.Local.sOrdr)
+			f.Intrinsic.String.Concat(v.local.sOrdr,v.Local.sSuf,v.Local.sWOLn)
+		f.Intrinsic.Control.Else
+			v.Local.sWOLn.Set(v.Args.WONum)
+		f.Intrinsic.Control.EndIf
+		
+		'Create the link
+		F.ODBC.Connection!con.ExecuteAndReturn("SELECT ifnull(MAX(LINK_ID),0) AS 'LinkID' FROM LINK_DATA",v.Local.sLink)
+		f.Intrinsic.Math.ConvertToLong(v.Local.sLink,v.Local.iLink)
+		f.Intrinsic.Math.Add(v.Local.iLink,1,v.Local.iLink)
+		f.Intrinsic.string.LPad(v.Local.iLink,"0",9,v.Local.sLink)
+		f.Intrinsic.String.Build("INSERT INTO LINK_DATA (LINK_ID,TYPE,ID) VALUES('{0}','{1}','{2}')",v.Local.sLink,"00020",v.Local.sWOLn,v.Local.ssql)
+		f.ODBC.Connection!con.execute(v.Local.ssql)
+				
+		'Create the association for part
+		f.Intrinsic.String.InstrRev(v.Local.sMyPF,".",v.Local.iFiEx)
+		f.Intrinsic.String.Mid(v.Local.sMyPF,v.Local.iFiEx,v.Local.sFTyp)
+		f.Intrinsic.String.Replace(v.Local.sFTyp,".","",v.Local.sFTyp)
+		f.Intrinsic.String.Concat(v.Local.sNewDir,v.Local.sMyPF,v.Local.sFFPt)
+		f.Intrinsic.String.Replace(v.Local.sMyPF,"\","",v.Local.sTmpF)
+		v.Local.ssql.Set("INSERT INTO ATG_DOC_ASSOC VALUES ('','{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','','','','',0)")
+		F.Intrinsic.String.Build(V.Local.SSQL,v.local.iLink,v.Local.sFTyp.UCase,v.Local.sNewDir,v.Local.sTmpF,"Parts",v.Ambient.Now.PervasiveDate,v.Caller.User,-1,v.Local.ssql)
+		f.ODBC.Connection!con.execute(v.Local.ssql)
+		
+		'Create the association for purchase orders
+		f.Intrinsic.String.InstrRev(v.Local.sMyOF,".",v.Local.iFiEx)
+		f.Intrinsic.String.Mid(v.Local.sMyOF,v.Local.iFiEx,v.Local.sFTyp)
+		f.Intrinsic.String.Replace(v.Local.sFTyp,".","",v.Local.sFTyp)
+		f.Intrinsic.String.Concat(v.Local.sNewDir,v.Local.sMyOF,v.Local.sFFPt)
+		f.Intrinsic.String.Replace(v.Local.sMyOF,"\","",v.Local.sTmpF)
+		v.Local.ssql.Set("INSERT INTO ATG_DOC_ASSOC VALUES ('','{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','','','','',0)")
+		F.Intrinsic.String.Build(V.Local.SSQL,v.local.iLink,v.Local.sFTyp.UCase,v.Local.sNewDir,v.Local.sTmpF,"Documents",v.Ambient.Now.PervasiveDate,v.Caller.User,-1,v.Local.ssql)
+		f.ODBC.Connection!con.execute(v.Local.ssql)
+		
+		f.Intrinsic.String.Concat("PLUGINS\WODocs\",v.Local.sONo,v.Local.sReplace)
+		f.Intrinsic.String.Replace(v.Local.sPOP,"QOCTemp",v.Local.sReplace,v.Local.sPOP)
+		f.Intrinsic.String.Replace(v.Local.sPic,"QOCTemp",v.Local.sReplace,v.Local.sPic)
+		F.Intrinsic.Control.If(v.Args.WONum.Trim,=,"")
+			f.Intrinsic.String.Build("INSERT INTO GAB_5380_HT_INDEX (ORDER_NO, SUFFIX, ROUTER, QTY, UOM, PIECECOUNT, DESCRIPTION, EXTRADESC, PICTURE, CUSTOMER, GSSPART, CUSTOMER_PO, PO_PICTURE, CM) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}')",v.Local.sONo,V.Local.sSuf,v.Local.sRtr,v.Local.fQty,v.Local.sUom,v.Local.fPCC,v.Local.sDes,v.Local.sEDs,v.Local.sPic,v.Local.sCus,v.Local.sPart,v.Local.sCPO,v.Local.sPOP,v.Local.iCM,v.Local.ssql)
+			f.ODBC.Connection!con.execute(v.Local.sSql)
+		F.Intrinsic.Control.EndIf
+		
+		v.Local.sMyImage.Set(v.DataTable.dtLines(v.Local.i).Picture!fieldvaltrim)
+		v.Local.sMyCustPO.Set(v.Screen.frmQOC!txtTempOImage.text)
+		'If blank WO, then Heat treatment order
+		f.Intrinsic.Control.If(v.Args.WONum.Trim,=,"")
+			f.Intrinsic.String.ConcatCallWrapperArgs("GENRL","019","1811",v.Local.sPrm)
+			f.Global.General.CallWrapperSyncBio(900100,v.Local.sPrm)
+			f.Intrinsic.String.Split("Terminal*!*MATLBAR*!*OUTBAR*!*FGBAR*!*PROGRAM*!*REPORTID*!*LOGO*!*MYIMAGE*!*MYCUSTPO*!*MYPART","*!*",v.Local.sPrm)
+			f.Intrinsic.String.concat(v.Caller.Terminal,"*!* *!* *!* *!*HEAT*!*001811*!* *!*",v.Local.sMyImage,"*!*",v.Local.sMyCustPO,"*!*",v.Local.sPart,v.Local.sVal)
+			f.Intrinsic.String.Split(v.Local.sVal,"*!*",v.Local.sval)
+			f.Global.BI.PrintReport(100004,0,v.Local.sPrm,v.Local.sVal,"",true)
+		f.Intrinsic.Control.Else
+		f.Intrinsic.Control.EndIf
+		
+	F.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Next(v.Local.i)
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmQOC_UnLoad)
+f.Intrinsic.Control.EndTry
+Program.Sub.createDC.End
+
+Program.Sub.updateWOQty.Start
+v.Local.ssql.Declare
+v.Local.sJob.Declare
+v.Local.sSuf.Declare
+v.Local.fQty.Declare
+v.Local.i.Declare
+v.Local.iPlusOne.Declare
+f.Intrinsic.String.Right(v.args.Order,6,v.Local.sJob)
+f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtLines.RowCount--,1)
+	v.Local.fQty.Set(v.DataTable.dtLines(v.Local.i).QTY!FIELDVAL)
+	f.Intrinsic.Math.Add(v.Local.i,1,v.Local.iPlusOne)
+	F.Intrinsic.String.LPad(V.Local.iPlusOne,"0",3,v.Local.sSuf)
+	f.Intrinsic.String.Build("UPDATE JOB_HEADER set QTY_ORDER='{0}', QTY_CUSTOMER='{1}' WHERE JOB='{2}' AND SUFFIX='{3}'",v.Local.fQTY,v.Local.fQTY,v.Local.sJob,v.Local.sSuf,v.Local.ssql)
+	f.ODBC.Connection!con.execute(v.Local.ssql)
+f.Intrinsic.Control.Next(v.Local.i)
+
+Program.Sub.updateWOQty.End
+
+Program.Sub.cmdClear_Click.Start
+v.Local.lRet.Declare
+f.Intrinsic.UI.Msgbox("Are you sure you want to clear the form?","Confirmation",4,v.Local.lRet)
+f.Intrinsic.Control.If(v.Local.lRet,=,6)
+	f.Intrinsic.Control.CallSub(clearAll)
+f.Intrinsic.Control.EndIf
+Program.Sub.cmdClear_Click.End
+
+Program.Sub.ClearAll.Start
+f.Intrinsic.Control.Try
+	gui.frmQOC.lblCust.Caption("")
+	gui.frmQOC.txtCRMNotes.Text("")
+	gui.frmQOC.txtCustNo.Text("")
+	gui.frmQOC.txtCustomerName.Text("")
+	gui.frmQOC.txtCustPO.Text("")
+	gui.frmQOC.txtDescription.Text("")
+	gui.frmQOC.txtKG.Text("")
+	gui.frmQOC.txtPieceCount.Text("")
+	gui.frmQOC.txtTempOImage.Text("")
+	gui.frmQOC.txtTempPImage.Text("")
+	gui.frmQOC.htmlDocs.Navigate("")
+	gui.frmQOC.htmlPart.Navigate("")
+	gui.frmQOC.txtWO.Text("")
+	gui.frmQOC.txtHeatQty.Text("")
+	f.Data.DataTable.DeleteRow("dtLines")
+	f.Intrinsic.Control.CallSub(deleteWatchFiles)
+	gui.frmQOC.tabPics.SetTab(0)
+	gui.frmQOC.txtCustomerName.SetFocus(true)
+	v.Global.bDocs.Set(False)
+	v.Global.bPart.Set(False)
+	f.Intrinsic.Control.CallSub(listenForDocs)
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmQOC_UnLoad)
+f.Intrinsic.Control.EndTry
+Program.Sub.ClearAll.End
+
+Program.Sub.cmdRetakePart_Click.Start
+f.Intrinsic.Control.Try
+	v.Local.lConf.Declare
+	v.Local.sFile.Declare
+	
+	v.Local.sFile.Set(v.Screen.frmQOC!txtTempPImage.text)
+	f.Intrinsic.Control.If(v.Local.sFile.Trim,<>,"")
+		f.Intrinsic.UI.MsgBox("Are you sure you want retake the part picture?","Retake Part Picture",4,v.Local.lConf)			
+		f.Intrinsic.Control.If(v.Local.lConf,=,6)
+			f.Intrinsic.File.DeleteFile(v.Local.sFile)
+			v.Global.bPart.Set(false)
+			gui.frmQOC.txtTempPImage.Text("")
+			gui.frmQOC.tabPics.SetTab(1)
+			gui.frmQOC.htmlPart.Navigate("")
+			f.Intrinsic.Control.CallSub(listenForPart)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.Else
+		f.Intrinsic.UI.Msgbox("No picture taken.")
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmQOC_Unload)
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdRetakePart_Click.End
+
+Program.Sub.cmdBrowseRtr_Click.Start
+V.Local.sCol.Declare(String)
+V.Local.sColW.Declare(String)
+V.Local.sRet.Declare(String)
+v.Local.sUom.Declare(string)
+v.Local.sVal.Declare(string)
+V.Local.sIHT.Declare(STRING)
+V.Local.sPart.Declare
+V.Local.sSQL.Declare(String,"SELECT  ROUTER, DESCRIPTION_ROUTER FROM V_ROUTER_HEADER")
+'Split Column Names into an array (*!* delimited string)
+F.Intrinsic.String.Split("Router#*!*Router Description","*!*",V.Local.sCol)
+'Split Column widths into an array (*!* delimited string)
+F.Intrinsic.String.Split("2000*!*3000","*!*",V.Local.sColW)
+F.Intrinsic.UI.Browser("Select a Router","Con",V.Local.sSQL,V.Local.sCol,V.Local.sColW,V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	f.Intrinsic.String.Split(v.Local.sRet,"*!*",v.Local.sRet)
+	gui.frmQOC.txtPart.Text(v.Local.sRet(0))
+	v.Local.sPart.Set(v.Local.sRet(0))
+	f.Intrinsic.String.build("SELECT BASE_UM FROM GAB_5380_MATRIX WHERE ROUTER='{0}'",v.Local.sRet(0).trim,v.Local.ssql)
+	f.ODBC.Connection!con.executeandreturn(v.Local.sSQL,v.Local.sUom)
+	F.Intrinsic.Control.If(v.Local.sUom.Trim,=,"CM")
+		gui.frmQOC.lblUM.Caption("KG")
+	F.Intrinsic.Control.Else
+		gui.frmQOC.lblUM.Caption(v.Local.sUom)
+	F.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.String.Build("SELECT CONV_FACTOR FROM GAB_5380_CUST_PRICE WHERE ROUTER='{0}'",v.Local.sRet(0).trim,v.Local.ssql)
+	f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sVal)
+
+	f.Intrinsic.String.Left(v.Local.sPart,5,v.Local.sIHT)
+	F.Intrinsic.Control.If(v.Local.sIHT.Trim,=,"H-IHT")
+		gui.frmQOC.txtCM.Visible(true)
+		gui.frmQOC.lblCM.Visible(true)
+	F.Intrinsic.Control.Else
+		gui.frmQOC.txtCM.Visible(false)
+		gui.frmQOC.lblCM.Visible(false)
+	F.Intrinsic.Control.EndIf
+	
+	'gui.frmQOC.txtKG.Text(v.Local.sVal)
+	gui.frmQOC.lblRtrDesc.Caption(v.Local.sRet(1))
+	gui.frmQOC.txtKG.SetFocus
+F.Intrinsic.Control.EndIf
+Program.Sub.cmdBrowseRtr_Click.End
+
+Program.Sub.txtPart_LostFocus.Start
+v.Local.sPart.Declare
+v.Local.sVal.Declare
+V.Local.sSQL.Declare
+v.Local.sIHT.Declare
+v.Local.sPart.Set(v.Screen.frmQOC!txtPart.text)
+f.Intrinsic.String.UCase(v.Local.sPart,v.Local.sPart)
+gui.frmQOC.txtPart.Text(v.Local.sPart.UCase)
+
+f.Intrinsic.String.Build("SELECT DESCRIPTION_ROUTER FROM V_ROUTER_HEADER WHERE ROUTER='{0}'",v.Local.sPart.Trim,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sVal)
+gui.frmQOC.lblRtrDesc.Caption(v.Local.sVal.Trim)
+
+f.Intrinsic.String.Build("SELECT BASE_UM FROM GAB_5380_MATRIX WHERE ROUTER='{0}'",v.Local.sPart.Trim,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sVal)
+F.Intrinsic.Control.If(v.Local.sVal.Trim,=,"CM")
+	gui.frmQOC.lblUM.Caption("KG")
+F.Intrinsic.Control.Else
+	gui.frmQOC.lblUM.Caption(v.Local.sVal.Trim)
+F.Intrinsic.Control.EndIf
+
+f.Intrinsic.String.Build("SELECT CONV_FACTOR FROM GAB_5380_CUST_PRICE WHERE ROUTER='{0}'",v.Local.sPart.Trim,v.Local.ssql)
+f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sVal)
+'gui.frmQOC.txtKG.Text(v.Local.sVal)
+
+f.Intrinsic.String.Left(v.Local.sPart,5,v.Local.sIHT)
+F.Intrinsic.Control.If(v.Local.sIHT.Trim,=,"H-IHT")
+	gui.frmQOC.txtCM.Visible(true)
+	gui.frmQOC.lblCM.Visible(true)
+F.Intrinsic.Control.Else
+	gui.frmQOC.txtCM.Visible(false)
+	gui.frmQOC.lblCM.Visible(false)
+F.Intrinsic.Control.EndIf
+
+gui.frmQOC.txtKG.SetFocus
+Program.Sub.txtPart_LostFocus.End
+
+Program.Sub.cmdWOBrowse_Click.Start
+V.Local.sCol.Declare
+V.Local.sColW.Declare
+V.Local.sRet.Declare
+v.Local.sJob.Declare
+v.Local.sWOLn.Declare
+'V.Local.sSQL.Declare(String,"SELECT  JOB, SUFFIX, SEQ, ROUTER, PART FROM V_JOB_OPERATIONS where left(Router,1)='M' and (PART='HBF' OR PART='HVF' OR PART='HTO' OR PART='HSS' OR PART='HSQ' OR PART='HSH' OR PART='HNT' OR PART='HIH' OR PART='HDB' OR PART='HCC' OR PART='HBF') AND CODE_SORT_OPER<>'PROCESSED'")
+V.Local.sSQL.Declare(String,"SELECT  JOB, SUFFIX, SEQ, ROUTER, PART FROM V_JOB_OPERATIONS where left(Router,1)='M' and (PART='HBF' OR PART='HVF' OR PART='HTO' OR PART='HSS' OR PART='HSQ' OR PART='HSH' OR PART='HNT' OR PART='HIH' OR PART='HDB' OR PART='HCC' OR PART='HBF')")
+'Split Column Names into an array (*!* delimited string)
+F.Intrinsic.String.Split("Job#*!*Suffix*!*Sequence*!*Router*!*Step","*!*",V.Local.sCol)
+'Split Column widths into an array (*!* delimited string)
+F.Intrinsic.String.Split("1000*!*500*!*1000*!*1000*!*1000","*!*",V.Local.sColW)
+F.Intrinsic.UI.Browser("Select a Job","Con",V.Local.sSQL,V.Local.sCol,V.Local.sColW,V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	gui.frmQOC.tabPics.SetTab(1)
+	f.Intrinsic.String.Split(v.Local.sRet,"*!*",v.Local.sRet)
+	f.Intrinsic.String.Concat(v.Local.sRet(0),"-",v.Local.sRet(1),"-",v.Local.sRet(2),v.Local.sJob)
+	gui.frmQOC.txtWO.Text(v.Local.sJob)
+	
+	'Enable semi-disable all
+	f.Intrinsic.Control.CallSub("semiDisable","Switch","False")
+	
+	'Listen for part document
+	f.Intrinsic.Control.CallSub(listenforPart)
+F.Intrinsic.Control.EndIf
+Program.Sub.cmdWOBrowse_Click.End
+
+Program.Sub.txtWO_KeyPressEnter.Start
+V.Local.sRet.Declare
+v.Local.sVal.Declare
+v.Local.sjob.Declare
+v.local.ssuf.Declare
+v.Local.sseq.Declare
+v.Local.sFullWO.Declare
+v.Local.sVal.Set(v.Screen.frmQOC!txtWO.text)
+f.Intrinsic.String.Replace(v.Local.sVal,"$%","",v.Local.sVal)
+F.Intrinsic.String.UCase(V.Local.sVal,V.Local.sVal)
+f.Intrinsic.String.Split(v.Local.sVal,"X",v.Local.sRet)
+gui.frmQOC.txtHeatQty.Text(v.Local.sRet(1))
+f.Intrinsic.String.Left(v.Local.sRet(0),6,v.Local.sjob)
+f.Intrinsic.String.Right(v.Local.sRet(0),6,v.Local.sseq)
+f.Intrinsic.String.Mid(v.Local.sRet(0),7,3,v.Local.ssuf)
+
+gui.frmQOC.tabPics.SetTab(1)
+f.Intrinsic.String.Concat(v.Local.sJob,"-",v.Local.sSuf,"-",v.Local.sseq,v.Local.sFullWO)
+gui.frmQOC.txtWO.Text(v.Local.sFullWO)
+
+'Enable semi-disable all
+f.Intrinsic.Control.CallSub("semiDisable","Switch","False")
+
+'Listen for part document
+f.Intrinsic.Control.CallSub(listenforPart)
+	
+Program.Sub.txtWO_KeyPressEnter.End
+
+Program.Sub.cmdClearAllTab_Click.Start
+v.Local.lRet.Declare
+f.Intrinsic.UI.Msgbox("Are you sure you want to clear the form?","Confirmation",4,v.Local.lRet)
+f.Intrinsic.Control.If(v.Local.lRet,=,6)
+	f.Intrinsic.Control.CallSub("semiDisable","Switch","True")
+	f.Intrinsic.Control.CallSub(clearAll)
+f.Intrinsic.Control.EndIf
+Program.Sub.cmdClearAllTab_Click.End
+
+Program.Sub.semiDisable.Start
+v.Local.sVal.Declare
+v.Local.sVal.Set(v.Args.Switch)
+gui.frmQOC.cmdClear.Enabled(v.Local.sVal)
+gui.frmQOC.txtCustomerName.Enabled(v.Local.sval)
+gui.frmQOC.cmdBrwCust.Enabled(v.Local.sVal)
+gui.frmQOC.txtCustPO.Enabled(v.Local.sVal)
+gui.frmQOC.txtPart.Enabled(v.Local.sVal)
+gui.frmQOC.cmdBrowseRtr.Enabled(v.Local.sVal)
+gui.frmQOC.txtKG.Enabled(v.Local.sVal)
+gui.frmQOC.txtPieceCount.Enabled(v.Local.sVal)
+gui.frmQOC.txtDescription.Enabled(v.Local.sVal)
+gui.frmQOC.cmdAdd.Enabled(v.Local.sVal)
+gui.frmQOC.cmdProcess.Enabled(v.Local.sVal)
+Program.Sub.semiDisable.End
+
+'on load,
+'on focus/lost focus of form the picture bug happens.
+Program.Sub.cmdAdd_Click.Start
+F.Intrinsic.Control.Try
+	v.Local.bCheck.Declare
+	v.Local.ssql.Declare
+	v.Local.sret.Declare
+	
+	f.Intrinsic.Control.If(v.Screen.frmQOC!txtPart.Text,=,"")
+		v.Local.bCheck.Set(True)
+		''gui.frmQOC.cboPart.BackColor(v.Color.Red)
+	f.Intrinsic.Control.Else
+		''gui.frmQOC.cboPart.BackColor(v.Color.White)
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.Control.If(v.Screen.frmQOC!txtDescription.text,=,"")
+		v.Local.bCheck.Set(True)
+		gui.frmQOC.txtDescription.BackColor(v.Color.Red)
+	f.Intrinsic.Control.Else
+		gui.frmQOC.txtDescription.BackColor(v.Color.White)
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.Control.If(v.Screen.frmQOC!txtKG.text,=,"")
+		v.Local.bCheck.Set(True)
+		gui.frmQOC.txtKG.BackColor(v.Color.Red)
+	f.Intrinsic.Control.Else
+		gui.frmQOC.txtKG.BackColor(v.Color.White)
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.Control.If(v.Screen.frmQOC!txtPieceCount.text,=,"")
+		v.Local.bCheck.Set(True)
+		gui.frmQOC.txtPieceCount.BackColor(v.Color.Red)
+	f.Intrinsic.Control.Else
+		gui.frmQOC.txtPieceCount.BackColor(v.Color.White)
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.Control.If(v.Screen.frmQOC!txtCM.Visible,=,true)
+		f.Intrinsic.Control.If(v.Screen.frmQOC!txtCM.text,=,"")
+			v.Local.bCheck.Set(True)
+			gui.frmQOC.txtPieceCount.BackColor(v.Color.Red)
+		f.Intrinsic.Control.Else
+			gui.frmQOC.txtPieceCount.BackColor(v.Color.White)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.Else
+		gui.frmQOC.txtCM.Text("0")
+	f.Intrinsic.Control.EndIf
+		
+	f.Intrinsic.Control.If(v.Screen.frmQOC!txtTempOImage.text,=,"")
+		v.Local.bCheck.Set(True)
+		f.Intrinsic.UI.Msgbox("Customer PO file is missing, please capture.")
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.Control.If(v.Screen.frmQOC!txtTempPImage.text,=,"")
+		v.Local.bCheck.Set(True)
+		f.Intrinsic.UI.Msgbox("Part picture file is missing, please capture picture.")
+	f.Intrinsic.Control.EndIf
+	
+	'router check
+	f.Intrinsic.String.build("SELECT * FROM V_ROUTER_HEADER WHERE ROUTER='{0}'",v.Screen.frmQOC!txtPart.text,v.Local.ssql)
+	f.ODBC.Connection!con.executeandreturn(v.Local.ssql,v.Local.sret)
+	f.Intrinsic.Control.If(v.Local.sret.Trim,=,"")
+		v.Local.bCheck.Set(True)
+		f.Intrinsic.UI.Msgbox("Router is not in Global Shop, please add router first.")
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.Control.If(v.Local.bCheck,=,False)
+		f.Data.DataTable.AddRow("dtLines","Customer",v.Screen.frmQOC!lblCust.caption,"Part",v.Screen.frmQOC!txtPart.text,"Description",v.Screen.frmQOC!txtDescription.text,"CM",v.Screen.frmQOC!txtCM.text,"QTY",v.Screen.frmQOC!txtKG.text,"Picture",v.Screen.frmQOC!txtTempPImage.text,"UoM",v.screen.frmQOC!lblUM.Caption,"PieceCount",v.Screen.frmQOC!txtPieceCount.text)
+		gui.frmQOC.txtPart.Text("")
+		gui.frmQOC.txtDescription.Text("")
+		gui.frmQOC.txtKG.Text("")
+		gui.frmQOC.txtTempPImage.Text("")
+		gui.frmQOC.lblUM.Caption("")
+		gui.frmQOC.lblRtrDesc.Caption("")
+		gui.frmQOC.txtPieceCount.Text("")
+		GUI.frmQOC.htmlPart.Navigate("")
+		gui.frmQOC.lblCM.Visible(false)
+		gui.frmQOC.txtCM.Visible(false)
+		gui.frmQOC.txtCM.Text("")
+		f.Intrinsic.Control.If(v.Screen.frmQOC!tabPics.Tab,=,1)
+			v.Global.bDocs.Set(true)
+			v.Global.bPart.Set(false)
+			f.Intrinsic.Control.CallSub(listenforPart)	
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.ODBC.Connection!con.Close
+	f.Intrinsic.Control.End
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdAdd_Click.End
+
+Program.Sub.txtCustomerName_KeyPress.Start
+f.Intrinsic.Control.CallSub(loadcustomer)
+Program.Sub.txtCustomerName_KeyPress.End
+
+Program.Sub.txtCustomerName_LostFocus.Start
+f.Intrinsic.Control.CallSub(loadCustomer)
+Program.Sub.txtCustomerName_LostFocus.End
+
+Program.Sub.frmQOC_UnLoad.Start
+f.ODBC.Connection!con.Close
+f.Intrinsic.Control.End
+Program.Sub.frmQOC_UnLoad.End
