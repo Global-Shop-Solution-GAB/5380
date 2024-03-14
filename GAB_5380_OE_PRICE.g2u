@@ -1,0 +1,99 @@
+Program.Sub.Preflight.Start
+Program.External.Include.Library("GAB_5380_LIBRARY.lib")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.Intrinsic.Control.Try
+	v.Local.sOrder.Declare
+	v.Local.sSql.Declare
+	v.Local.sSuf.Declare
+	v.Local.sPart.Declare
+	f.ODBC.Connection!con.openconnection(v.Ambient.PDSN,v.Ambient.PUser,v.Ambient.PPass)
+	F.Intrinsic.Control.If(v.Caller.Hook,=,"12010")
+		v.Passed.000162.Set("Reprice")
+		v.Passed.000141.Set("Heat WO")
+	f.Intrinsic.Control.ElseIf(v.Caller.Hook,=,"12420")
+		'Print the Heat Treat Work Order
+		v.Local.sret.Declare
+		v.Local.sVal.Declare
+		v.Local.sPrm.Declare
+		v.Local.sMyImage.Declare
+		v.Local.smycustPO.Declare
+		v.Local.sFile.Declare
+		v.Local.sPath.Declare
+		v.Local.sfullfilepath.Declare
+		V.Local.sWO.Declare
+		v.Local.sWOH.Declare
+		v.Local.sWOS.Declare
+		v.Local.lID.Declare
+		v.Local.sPart.Set("Reprint")
+		
+		'Get Wo
+		f.Intrinsic.String.LPad(v.Passed.000060,"0",7,v.Local.sOrder)
+		f.Intrinsic.String.LPad(v.Passed.000051,"0",3,v.Local.sSuf)
+		f.Intrinsic.String.Left(v.Local.sSuf,3,v.Local.sSuf)
+		f.Intrinsic.String.Build("SELECT JOB, SUFFIX FROM V_ORDER_TO_WO WHERE ORDER_NO='{0}' AND ORDER_LINE='{1}0'",v.Local.sOrder,v.Local.sSuf,v.Local.ssql)
+		f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.sret)
+		f.Intrinsic.String.Split(v.Local.sret,"*!*",v.Local.sret)
+		v.Local.sWOH.Set(v.Local.sret(0))
+		v.Local.sWOS.Set(v.Local.sret(1))
+	
+		'Get Document link
+		f.Intrinsic.String.Concat(v.Local.sret(0),v.Local.sret(1),v.Local.sWO)
+		f.Intrinsic.String.Build("select link_id_int from v_LINK_DATA where id='{0}'",v.Local.sWO,v.Local.ssql)
+		f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.lID)
+		
+		'Get Parts image
+		f.Intrinsic.String.Build("SELECT PATH FROM ATG_DOC_ASSOC WHERE link_ID='{0}' and description='Parts'",v.Local.lID,v.Local.ssql)
+		f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.spath)
+		f.Intrinsic.String.Build("SELECT FILE FROM ATG_DOC_ASSOC WHERE link_ID='{0}' and description='Parts'",v.Local.lID,v.Local.ssql)
+		f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.sFile)
+		f.Intrinsic.String.Concat(v.Local.sPath.RTrim,"\",v.Local.sFile.RTrim,v.Local.sfullfilepath)
+		v.Local.sMyImage.Set(v.Local.sfullfilepath)
+		
+		'Get PO image
+		f.Intrinsic.String.Build("SELECT PATH FROM ATG_DOC_ASSOC WHERE link_ID='{0}' and description='Documents'",v.Local.lID,v.Local.ssql)
+		f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.spath)
+		f.Intrinsic.String.Build("SELECT FILE FROM ATG_DOC_ASSOC WHERE link_ID='{0}' and description='Documents'",v.Local.lID,v.Local.ssql)
+		f.ODBC.Connection!con.executeandreturn(v.Local.sSql,v.Local.sFile.RTrim)
+		f.Intrinsic.String.Concat(v.Local.sPath.RTrim,"\",v.Local.sFile.RTrim,v.Local.sfullfilepath)
+		v.Local.smycustPO.Set(v.Local.sfullfilepath)
+	
+		'Print heat treatment paperwork
+		f.Intrinsic.String.ConcatCallWrapperArgs(v.Local.sWOH,v.Local.sWOS,"1811",v.Local.sPrm)
+		f.Global.General.CallWrapperSyncBio(900100,v.Local.sPrm)
+		f.Intrinsic.String.Split("Terminal*!*MATLBAR*!*OUTBAR*!*FGBAR*!*PROGRAM*!*REPORTID*!*LOGO*!*MYIMAGE*!*MYCUSTPO*!*MYPART","*!*",v.Local.sPrm)
+		f.Intrinsic.String.concat(v.Caller.Terminal,"*!* *!* *!* *!*HEAT*!*001811*!* *!*",v.Local.sMyImage,"*!*",v.Local.sMyCustPO,"*!*",v.Local.sPart,v.Local.sVal)
+		f.Intrinsic.String.Split(v.Local.sVal,"*!*",v.Local.sval)
+		f.Global.BI.PrintReport(100004,0,v.Local.sPrm,v.Local.sVal,"",true)
+	
+	f.Intrinsic.Control.Else
+		v.Local.fPrice.Declare
+		v.Local.fExten.Declare
+		v.Local.fNwQty.Declare
+		v.Local.sMsg.Declare
+		v.Local.fQty.Declare
+		v.Local.sCust.Declare
+		V.Local.fQty.Set(V.Passed.000007)
+		f.Intrinsic.String.LPad(v.Passed.000060,"0",7,v.Local.sOrder)
+		V.Local.sPart.Set(V.Passed.000052)
+		f.Intrinsic.String.Build("SELECT CUSTOMER FROM V_ORDER_HEADER WHERE ORDER_NO='{0}'",V.Local.sOrder,v.Local.ssql)
+		f.ODBC.Connection!CON.executeandreturn(v.Local.ssql,v.Local.sCust)
+		
+		f.Intrinsic.Control.CallSub(getPricing,"Rtr",v.Local.sPart,"Qty",v.Local.fQty,"Cust",v.Local.sCust)
+		f.in.variable.argtovar(fPrice,v.local.fPrice)
+		f.In.variable.argtovar(fNwQty,v.Local.fNwQty)
+		'v.Passed.000067.Set(v.Local.fPrice)
+		v.Passed.000009.Set(v.Local.fPrice)
+		'v.Passed.000001.Set(v.Local.fNwQty)
+		v.Passed.000007.Set(v.Local.fNwQty)
+	F.Intrinsic.Control.EndIf
+	
+	f.ODBC.Connection!con.Close
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.ODBC.Connection!con.Close
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.EndTry
+Program.Sub.Main.End
