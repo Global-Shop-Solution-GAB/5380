@@ -1,0 +1,61 @@
+Program.Sub.ScreenSU.Start
+Gui.frmWODetail..Create
+Gui.frmWODetail..Caption("WO Detail")
+Gui.frmWODetail..Size(13875,8475)
+Gui.frmWODetail..MinX(0)
+Gui.frmWODetail..MinY(0)
+Gui.frmWODetail..Position(0,0)
+Gui.frmWODetail..BackColor(-2147483633)
+Gui.frmWODetail..MousePointer(0)
+Gui.frmWODetail..Event(UnLoad,frmWODetail_UnLoad)
+Gui.frmWODetail.gsgcWODetail.Create(GsGridControl)
+Gui.frmWODetail.gsgcWODetail.Size(13440,7740)
+Gui.frmWODetail.gsgcWODetail.Position(75,45)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.Intrinsic.Control.Try
+	'Hook 15110
+	v.Local.sOrder.Declare
+	v.Local.sSQL.Declare
+	v.Local.i.Declare
+	
+	v.Local.sOrder.Set(v.Passed.009001)
+	f.Data.DataTable.Create("dtDtl",true)
+	f.Data.DataTable.AddColumn("dtDtl","Job","string")
+	f.Data.DataTable.AddColumn("dtDtl","Suffix","string")
+	f.Data.DataTable.AddColumn("dtDtl","Seq","string")
+	f.Data.DataTable.AddColumn("dtDtl","DateSeq","string")
+	f.Data.DataTable.AddColumn("dtDtl","Employee","string")
+	f.Data.DataTable.AddColumn("dtDtl","Machine","string")
+	f.Data.DataTable.AddColumn("dtDtl","HoursWorked","float")
+	f.ODBC.Connection!con.opencompanyconnection(60)
+	f.Intrinsic.String.Build("SELECT JOB, SUFFIX FROM V_JOB_HEADER WHERE SALES_ORDER='{0}'",v.Local.sOrder,v.Local.sSQL)
+	f.Data.DataTable.CreateFromSQL("dt","con",v.Local.sSQL,true)
+	f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dt.RowCount--,1)
+		f.Intrinsic.String.Build("SELECT Job, Suffix, Seq, DATE_SEQUENCE as 'DateSeq', Employee, Machine, HOURS_WORKED as 'HoursWorked' FROM JOB_DETAIL WHERE LMO='L' AND JOB='{0}' AND SUFFIX='{1}'",V.DataTable.dt(v.Local.i).JOB!FIELDVALTRIM,v.DataTable.dt(v.Local.i).SUFFIX!FIELDVALTRIM,v.Local.ssql)
+		f.Intrinsic.Control.If(v.DataTable.dtTemp.Exists)
+			f.Data.DataTable.Close("dtTemp")
+		f.Intrinsic.Control.EndIf
+		f.Data.DataTable.CreateFromSQL("dtTemp","con",v.Local.ssql,true)
+		f.Data.DataTable.Merge("dtTemp","dtDtl",true,2)
+	f.Intrinsic.Control.Next(v.Local.i)
+	
+	gui.frmWODetail.gsgcWODetail.DataSource("dtDtl")
+	gui.frmWODetail.gsgcWODetail.AddGridviewFromDatatable("gv","dtDtl")
+	gui.frmWODetail..Show
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.CallSub(frmWODetail_UnLoad)
+f.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.frmWODetail_UnLoad.Start
+f.ODBC.Connection!con.Close
+f.Intrinsic.Control.End
+Program.Sub.frmWODetail_UnLoad.End
+
+
